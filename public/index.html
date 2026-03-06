@@ -6,11 +6,6 @@
 <title>SheSafe — Personal Safety Guardian</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════
-   SHESAFE — Dark Rose Theme
-   UI: new dark sidebar layout
-   JS:  100% original working logic preserved
-   ═══════════════════════════════════════════════════ */
 :root {
   --bg:        #0e0810;
   --bg2:       #130b16;
@@ -60,7 +55,6 @@ body::before {
     radial-gradient(ellipse 35% 35% at 50% 50%, rgba(95,184,150,0.03) 0%, transparent 55%);
 }
 
-/* ═══════ LAYOUT ═══════ */
 .app {
   position:relative; z-index:1;
   display:grid;
@@ -69,7 +63,6 @@ body::before {
   height:100vh; width:100vw;
 }
 
-/* ═══════ SIDEBAR ═══════ */
 .sidebar {
   background:var(--panel);
   border-right:1px solid var(--border);
@@ -102,7 +95,6 @@ body::before {
 .brand em { font-style:italic; color:var(--mauve); }
 .brand-tagline { font-size:0.68rem; color:var(--muted); margin-top:4px; letter-spacing:0.06em; }
 
-/* Nav */
 .nav-section { padding:0 10px; flex:1; overflow-y:auto; }
 .nav-label {
   font-size:0.6rem; font-weight:700; letter-spacing:0.18em;
@@ -130,7 +122,6 @@ body::before {
 .nav-icon { font-size:1.05rem; width:20px; text-align:center; }
 .nav-text  { font-size:0.86rem; }
 
-/* Connection badges */
 .sidebar-conn {
   margin:12px 10px 0;
   display:flex; flex-direction:column; gap:5px;
@@ -150,7 +141,6 @@ body::before {
 .ws-badge.connected .ws-dot { animation:wsdot-pulse 1.4s ease infinite; }
 @keyframes wsdot-pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.8);opacity:0.4} }
 
-/* Status pill */
 .sidebar-status {
   margin:10px 10px 0;
   padding:12px 14px;
@@ -186,13 +176,11 @@ body::before {
   font-size:0.72rem; color:var(--muted);
 }
 
-/* ═══════ MAIN AREA ═══════ */
 .main-area {
   display:flex; flex-direction:column;
   overflow:hidden;
 }
 
-/* Top bar */
 .topbar {
   padding:14px 24px;
   border-bottom:1px solid var(--border);
@@ -231,25 +219,21 @@ body::before {
 }
 .test-btn:hover { border-color:var(--sage); color:var(--sage); }
 
-/* ═══════ PAGE SCROLL WRAP ═══════ */
 .page-scroll {
   flex:1; overflow-y:auto; padding:20px 24px;
 }
 .page-scroll::-webkit-scrollbar { width:4px; }
 .page-scroll::-webkit-scrollbar-thumb { background:rgba(232,82,122,0.2); border-radius:999px; }
 
-/* ═══════ PAGES ═══════ */
 .page { display:none; padding-bottom:20px; }
 .page.active { display:block; }
 
-/* ═══════ HOME PAGE GRID ═══════ */
 .home-grid {
   display:grid;
   grid-template-columns:1fr 1fr 1fr 320px;
   gap:14px;
 }
 
-/* Shield card */
 .shield-section {
   grid-column:1/2;
   background:var(--card);
@@ -266,11 +250,10 @@ body::before {
   position:relative; width:160px; height:160px;
   display:flex; align-items:center; justify-content:center;
 }
-/* rings are LARGER than the button — never block clicks */
 .petal-ring {
   position:absolute; border-radius:50%;
   border:1px solid rgba(232,82,122,0.2);
-  pointer-events:none; /* CRITICAL — rings must never intercept clicks */
+  pointer-events:none;
 }
 .petal-ring:nth-child(1){ width:160px; height:160px; opacity:0.4; }
 .petal-ring:nth-child(2){ width:142px; height:142px; opacity:0.3; animation:ring-breathe 3s ease-in-out infinite; }
@@ -284,7 +267,7 @@ body::before {
   box-shadow:0 0 0 2px rgba(232,82,122,0.25), 0 8px 28px rgba(0,0,0,0.5);
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:5px; transition:all 0.3s;
-  position:relative; z-index:2; /* above rings */
+  position:relative; z-index:2;
 }
 .shield-btn:hover { transform:scale(1.05); box-shadow:0 0 0 3px rgba(232,82,122,0.4), 0 8px 36px rgba(232,82,122,0.2); }
 .shield-btn:active { transform:scale(0.97); }
@@ -306,7 +289,6 @@ body::before {
 .shield-btn.sos-active .shield-label { color:var(--danger); }
 .shield-hint { font-size:0.73rem; color:var(--muted); text-align:center; line-height:1.6; max-width:170px; }
 
-/* Sensor cards — 4 of them in cols 2-3 */
 .sensor-col {
   display:flex; flex-direction:column; gap:14px;
 }
@@ -337,7 +319,6 @@ body::before {
 .bar.danger    { background:linear-gradient(90deg, #f87171, var(--danger)); }
 .bar.blue-bar  { background:linear-gradient(90deg, rgba(74,144,217,0.4), var(--blue)); }
 
-/* Timeline card spans full right column */
 .timeline-card {
   grid-column:4/5;
   grid-row:1/4;
@@ -385,7 +366,6 @@ body::before {
 .tl-badge.warn   { background:var(--warn-light);     color:var(--warn);    border:1px solid rgba(232,162,70,0.3); }
 .tl-badge.sensor { background:var(--blue-light);     color:var(--blue);    border:1px solid rgba(74,144,217,0.3); }
 
-/* Charts row */
 .charts-row {
   grid-column:1/4;
   display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;
@@ -406,7 +386,6 @@ body::before {
 .chart-badge.blue  { background:var(--blue-light); color:var(--blue); border-color:rgba(74,144,217,0.25); }
 canvas.sparkline { width:100%; height:60px; display:block; }
 
-/* Location card */
 .location-card {
   grid-column:1/4;
   background:var(--card); border:1px solid var(--border);
@@ -430,7 +409,6 @@ canvas.sparkline { width:100%; height:60px; display:block; }
 }
 .location-link.show { display:block; }
 
-/* SOS banner */
 .sos-banner {
   grid-column:1/4;
   display:none; padding:11px 18px;
@@ -441,7 +419,6 @@ canvas.sparkline { width:100%; height:60px; display:block; }
 .sos-banner.show { display:block; animation:banner-slide 0.3s ease; }
 @keyframes banner-slide { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
 
-/* ═══════ SENSORS/DASH PAGE ═══════ */
 .section-title {
   font-size:0.64rem; font-weight:800; letter-spacing:0.2em;
   text-transform:uppercase; color:var(--muted);
@@ -455,7 +432,6 @@ canvas.sparkline { width:100%; height:60px; display:block; }
   border-radius:16px; padding:16px; margin-bottom:12px;
 }
 
-/* Raw data panel */
 .raw-panel {
   background:#130b16; border:1px solid var(--border);
   border-radius:14px; padding:14px 16px;
@@ -468,7 +444,6 @@ canvas.sparkline { width:100%; height:60px; display:block; }
 .raw-key  { color:var(--rose2); }
 .raw-val  { color:#ffffff; }
 
-/* Android guide */
 .android-guide-card {
   background:linear-gradient(135deg, rgba(29,78,216,0.08), rgba(59,130,246,0.04));
   border:1px solid rgba(59,130,246,0.2);
@@ -485,7 +460,6 @@ canvas.sparkline { width:100%; height:60px; display:block; }
   flex-shrink:0; margin-top:2px;
 }
 
-/* ═══════ CONTACTS PAGE ═══════ */
 .contacts-layout { display:grid; grid-template-columns:1fr 340px; gap:16px; }
 .contact-item {
   background:var(--card2); border:1px solid var(--border);
@@ -558,7 +532,6 @@ canvas.sparkline { width:100%; height:60px; display:block; }
 #sosMsg:focus { border-color:var(--rose); }
 .msg-hint { font-size:0.65rem; color:var(--muted); margin-top:5px; line-height:1.5; }
 
-/* ═══════ SETTINGS PAGE ═══════ */
 .settings-layout { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .setting-block {
   background:var(--card); border:1px solid var(--border);
@@ -656,7 +629,6 @@ input[type=range]::-moz-range-thumb {
 .sos-history-text { flex:1; font-size:0.77rem; color:var(--text2); line-height:1.5; }
 .sos-history-time { font-size:0.65rem; color:var(--muted); margin-top:2px; font-family:'DM Mono', monospace; }
 
-/* ═══════ OVERLAYS ═══════ */
 .sos-overlay {
   display:none; position:fixed; inset:0; z-index:200;
   background:rgba(10,5,14,0.96); backdrop-filter:blur(20px);
@@ -687,7 +659,6 @@ input[type=range]::-moz-range-thumb {
 @keyframes gentle-shake { 0%,100%{transform:translateX(0)} 30%{transform:translateX(-5px)} 70%{transform:translateX(5px)} }
 .cancel-btn:hover { background:var(--rose); color:#fff; animation:none; }
 
-/* SMS send screen */
 .sos-send-screen {
   display:none; position:fixed; inset:0; z-index:200;
   background:rgba(10,5,14,0.97); backdrop-filter:blur(20px);
@@ -742,7 +713,6 @@ input[type=range]::-moz-range-thumb {
   box-shadow:0 4px 18px rgba(95,184,150,0.3);
 }
 
-/* Test overlays */
 .test-overlay {
   display:none; position:fixed; inset:0; z-index:200;
   background:rgba(8,16,12,0.96); backdrop-filter:blur(20px);
@@ -766,7 +736,6 @@ input[type=range]::-moz-range-thumb {
 }
 .tri { font-size:1.2rem; flex-shrink:0; }
 
-/* Toast */
 .toast {
   position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(10px);
   background:var(--card2); border:1px solid var(--border2);
@@ -781,7 +750,6 @@ input[type=range]::-moz-range-thumb {
 <body>
 <div class="app">
 
-  <!-- ═══════ SIDEBAR ═══════ -->
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-logo"><div class="brand-icon">🌸</div>She<em>Safe</em></div>
@@ -814,7 +782,6 @@ input[type=range]::-moz-range-thumb {
     <div class="sidebar-clock" id="sidebarClock">--:--:--</div>
   </aside>
 
-  <!-- ═══════ MAIN AREA ═══════ -->
   <div class="main-area">
     <div class="topbar">
       <div class="page-title" id="pageHeading">Guard <span>Mode</span></div>
@@ -826,11 +793,10 @@ input[type=range]::-moz-range-thumb {
 
     <div class="page-scroll">
 
-      <!-- ══════════════════ HOME PAGE ══════════════════ -->
+      <!-- HOME PAGE -->
       <div class="page active" id="pageHome">
         <div class="home-grid">
 
-          <!-- Shield -->
           <div class="shield-section" id="shieldSection">
             <div class="shield-outer">
               <div class="petal-ring"></div>
@@ -844,7 +810,6 @@ input[type=range]::-moz-range-thumb {
             <p class="shield-hint" id="shieldHint">Tap to activate sensors &amp; begin safety monitoring</p>
           </div>
 
-          <!-- Accel -->
           <div class="card" id="cardAccel">
             <div class="card-icon">📳</div>
             <div class="card-label">Accelerometer</div>
@@ -853,7 +818,6 @@ input[type=range]::-moz-range-thumb {
             <div class="bar-wrap"><div class="bar" id="barAccel" style="width:0%"></div></div>
           </div>
 
-          <!-- Gyro -->
           <div class="card" id="cardGyro">
             <div class="card-icon">🌀</div>
             <div class="card-label">Gyroscope</div>
@@ -862,7 +826,6 @@ input[type=range]::-moz-range-thumb {
             <div class="bar-wrap"><div class="bar" id="barGyro" style="width:0%"></div></div>
           </div>
 
-          <!-- Timeline — spans full right column rows 1-4 -->
           <div class="timeline-card">
             <div class="tc-head">
               <div class="tc-title">Event Log</div>
@@ -871,7 +834,6 @@ input[type=range]::-moz-range-thumb {
             <div class="tc-body" id="timeline"></div>
           </div>
 
-          <!-- Sound -->
           <div class="card" id="cardSound">
             <div class="card-icon">🎙️</div>
             <div class="card-label">Sound Level</div>
@@ -880,7 +842,6 @@ input[type=range]::-moz-range-thumb {
             <div class="bar-wrap"><div class="bar" id="barSound" style="width:0%"></div></div>
           </div>
 
-          <!-- GPS -->
           <div class="card" id="cardGPS">
             <div class="card-icon">📍</div>
             <div class="card-label">GPS</div>
@@ -889,7 +850,6 @@ input[type=range]::-moz-range-thumb {
             <div class="bar-wrap"><div class="bar" id="barGPS" style="width:0%"></div></div>
           </div>
 
-          <!-- Charts -->
           <div class="charts-row">
             <div class="chart-card">
               <div class="chart-header">
@@ -914,7 +874,6 @@ input[type=range]::-moz-range-thumb {
             </div>
           </div>
 
-          <!-- Location -->
           <div class="location-card">
             <div style="width:100%;">
               <div class="location-header">
@@ -926,34 +885,20 @@ input[type=range]::-moz-range-thumb {
             </div>
           </div>
 
-          <!-- SOS banner -->
           <div class="sos-banner" id="sosBanner">
             🆘 SOS has been sent! SMS is opening for your emergency contacts. Stay safe. 🌸
           </div>
 
         </div>
-      </div><!-- /pageHome -->
+      </div>
 
-      <!-- ══════════════════ SENSORS / DASH PAGE ══════════════════ -->
+      <!-- SENSORS / DASH PAGE -->
       <div class="page" id="pageDash">
         <div class="section-title">Live Sensor Streams</div>
 
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
           <span class="ws-badge disconnected" id="wsBadge2"><span class="ws-dot"></span>Connecting…</span>
           <span class="ws-badge" id="androidBadge2" style="color:#4a90d9;border-color:rgba(74,144,217,0.3);background:rgba(74,144,217,0.08);"><span class="ws-dot"></span>Android offline</span>
-        </div>
-
-        <div class="chart-card-full">
-          <div class="chart-header"><div class="chart-title">📳 Linear Acceleration</div><span class="chart-badge" id="accelBadge2">X: — Y: — Z: —</span></div>
-          <canvas class="sparkline" id="accelChart2" width="400" height="60"></canvas>
-        </div>
-        <div class="chart-card-full">
-          <div class="chart-header"><div class="chart-title">🌀 Gyroscope</div><span class="chart-badge green" id="gyroBadge2">X: — Y: — Z: —</span></div>
-          <canvas class="sparkline" id="gyroChart2" width="400" height="60"></canvas>
-        </div>
-        <div class="chart-card-full">
-          <div class="chart-header"><div class="chart-title">🎙️ Microphone Level</div><span class="chart-badge blue" id="soundBadge2">— dB</span></div>
-          <canvas class="sparkline" id="soundChart2" width="400" height="60"></canvas>
         </div>
 
         <div class="section-title">Raw Readouts</div>
@@ -977,9 +922,9 @@ input[type=range]::-moz-range-thumb {
           <div class="step"><div class="step-num">2</div><div>Build and run <strong>SensorApp</strong> on your phone. Tap START and grant all permissions.</div></div>
           <div class="step"><div class="step-num">3</div><div>The <strong>Android live</strong> badge turns green and charts update in real time. Works over any network.</div></div>
         </div>
-      </div><!-- /pageDash -->
+      </div>
 
-      <!-- ══════════════════ CONTACTS PAGE ══════════════════ -->
+      <!-- CONTACTS PAGE -->
       <div class="page" id="pageContacts">
         <div class="contacts-layout">
           <div>
@@ -1019,9 +964,9 @@ input[type=range]::-moz-range-thumb {
             </div>
           </div>
         </div>
-      </div><!-- /pageContacts -->
+      </div>
 
-      <!-- ══════════════════ SETTINGS PAGE ══════════════════ -->
+      <!-- SETTINGS PAGE -->
       <div class="page" id="pageSettings">
         <div class="settings-layout">
 
@@ -1096,13 +1041,13 @@ input[type=range]::-moz-range-thumb {
           </div>
 
         </div>
-      </div><!-- /pageSettings -->
+      </div>
 
-    </div><!-- /page-scroll -->
-  </div><!-- /main-area -->
-</div><!-- /app -->
+    </div>
+  </div>
+</div>
 
-<!-- ══════ SOS COUNTDOWN OVERLAY ══════ -->
+<!-- SOS COUNTDOWN OVERLAY -->
 <div class="sos-overlay" id="sosOverlay">
   <div class="sos-ov-title">⚠️ SOS Triggered</div>
   <div class="sos-ov-sub" id="sosReason">Emergency detected — sending alert in…</div>
@@ -1116,10 +1061,10 @@ input[type=range]::-moz-range-thumb {
   <button class="cancel-btn" onclick="cancelSOS()">TAP TO CANCEL</button>
 </div>
 
-<!-- ══════ SMS SEND SCREEN ══════ -->
+<!-- SMS SEND SCREEN -->
 <div class="sos-send-screen" id="sosSendScreen"></div>
 
-<!-- ══════ TEST OVERLAY ══════ -->
+<!-- TEST OVERLAY -->
 <div class="test-overlay" id="testOverlay">
   <div class="sos-ov-title" style="color:var(--sage);">🧪 Test SOS</div>
   <div class="sos-ov-sub">Simulating a full SOS dry run…</div>
@@ -1133,7 +1078,7 @@ input[type=range]::-moz-range-thumb {
   <button class="cancel-btn" style="border-color:var(--sage);color:var(--sage);" onclick="cancelTestSOS()">CANCEL TEST</button>
 </div>
 
-<!-- ══════ TEST RESULT OVERLAY ══════ -->
+<!-- TEST RESULT OVERLAY -->
 <div class="test-result-overlay" id="testResultOverlay">
   <div class="test-result-inner">
     <div style="font-size:3rem;text-align:center;">✅</div>
@@ -1146,15 +1091,6 @@ input[type=range]::-moz-range-thumb {
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════════
-//  SheSafe × SensorApp — Web Dashboard  (JS 100% original, untouched)
-//  Only the CSS/HTML shell has been reskinned to the dark rose theme.
-//  All logic, IDs, class interactions, and API calls are preserved.
-// ═══════════════════════════════════════════════════════════════════
-
-// ═══════════════════════════════════════════════════════
-
-// ── State ────────────────────────────────────────────
 let monitoring = false, sosActive = false;
 let countInterval = null, countdownVal = 10;
 let cooldownActive = false;
@@ -1168,11 +1104,9 @@ let testTimer = null, testCount = 10, testMode = false;
 let settings = { motion:true, sound:true, gyro:true, vibrate:true, beep:true, cooldown:true, background:true };
 let androidConnected = false;
 
-// ── Chart history ─────────────────────────────────────
 const HIST = 60;
 let accelHist = [], gyroHist = [], soundHist = [];
 
-// ── API helpers ───────────────────────────────────────
 const API = {
   base: '/api',
   get: (p)   => fetch(`${API.base}${p}`).then(r=>r.json()).catch(()=>null),
@@ -1180,9 +1114,6 @@ const API = {
   del:  (p)   => fetch(`${API.base}${p}`,{method:'DELETE'}).then(r=>r.json()).catch(()=>null)
 };
 
-// ─────────────────────────────────────────────────────
-//  WEBSOCKET — connects to /browser on the Node server
-// ─────────────────────────────────────────────────────
 let ws = null;
 let wsReconnectTimer = null;
 
@@ -1200,17 +1131,13 @@ function connectWS() {
   ws.onmessage = (e) => {
     let msg;
     try { msg = JSON.parse(e.data); } catch { return; }
-
-    if (msg.type === 'init' || msg.type === 'sensor') {
-      ingestSensorFrame(msg.data);
-    }
+    if (msg.type === 'init' || msg.type === 'sensor') { ingestSensorFrame(msg.data); }
     if (msg.type === 'android_status') {
       androidConnected = msg.connected;
       setAndroidBadge(msg.connected);
       addEvent(msg.connected ? '📱 Android connected — live sensor stream' : '📱 Android disconnected', msg.connected ? 'ok' : 'warn', msg.connected ? 'sensor' : 'warn');
     }
     if (msg.type === 'sos') {
-      // Another client triggered SOS — show it in our log
       sosHistory.unshift(msg.data);
       renderSOSHistory();
     }
@@ -1221,9 +1148,7 @@ function connectWS() {
     wsReconnectTimer = setTimeout(connectWS, 4000);
   };
 
-  ws.onerror = () => {
-    ws.close();
-  };
+  ws.onerror = () => { ws.close(); };
 }
 
 function setWSBadge(connected) {
@@ -1238,23 +1163,17 @@ function setAndroidBadge(connected) {
   b.innerHTML = `<span class="ws-dot"></span>${connected ? 'Android live' : 'Android offline'}`;
 }
 
-// ─────────────────────────────────────────────────────
-//  INGEST — called on every sensor frame from server
-// ─────────────────────────────────────────────────────
 function ingestSensorFrame(data) {
   if (!data) return;
-
   const accel = data.accel || {};
   const gyro  = data.gyro  || {};
   const mic   = data.mic   || {};
   const gps   = data.gps   || {};
 
-  // Charts
   pushHistory(accelHist, accel.mag || 0);
   pushHistory(gyroHist,  gyro.mag  || 0);
   pushHistory(soundHist, mic.db    || 30);
 
-  // Raw readout panel
   updateRaw('AccelX', (accel.x || 0).toFixed(3));
   updateRaw('AccelY', (accel.y || 0).toFixed(3));
   updateRaw('AccelZ', (accel.z || 0).toFixed(3));
@@ -1268,15 +1187,12 @@ function ingestSensorFrame(data) {
     updateRaw('Speed', gps.speed ? gps.speed.toFixed(2) + ' m/s' : '—');
   }
 
-  // Chart badges
   document.getElementById('accelBadge').textContent = `X:${(accel.x||0).toFixed(1)} Y:${(accel.y||0).toFixed(1)} Z:${(accel.z||0).toFixed(1)}`;
   document.getElementById('gyroBadge').textContent  = `X:${(gyro.x||0).toFixed(1)} Y:${(gyro.y||0).toFixed(1)} Z:${(gyro.z||0).toFixed(1)}`;
   document.getElementById('soundBadge').textContent = (mic.db || 0).toFixed(1) + ' dB';
 
-  // GPS for SOS location
   if (gps.lat && gps.lng) {
-    gpsLat = gps.lat;
-    gpsLon = gps.lng;
+    gpsLat = gps.lat; gpsLon = gps.lng;
     document.getElementById('valGPS').textContent = parseFloat(gpsLat).toFixed(5);
     document.getElementById('barGPS').style.width = '100%';
     document.getElementById('cardGPS').className = 'card safe';
@@ -1284,7 +1200,6 @@ function ingestSensorFrame(data) {
       `📍 ${parseFloat(gpsLat).toFixed(5)}, ${parseFloat(gpsLon).toFixed(5)} ±${Math.round(gps.accuracy || 0)}m`;
   }
 
-  // Only trigger SOS checks when monitoring is active
   if (!monitoring) return;
 
   const aMag = accel.mag || 0;
@@ -1306,14 +1221,9 @@ function ingestSensorFrame(data) {
   }
 }
 
-// ─────────────────────────────────────────────────────
-//  INIT
-// ─────────────────────────────────────────────────────
 async function init() {
   const savedContacts = await API.get('/contacts');
-  if (savedContacts && Array.isArray(savedContacts)) {
-    contacts = savedContacts;
-  }
+  if (savedContacts && Array.isArray(savedContacts)) contacts = savedContacts;
 
   const savedSettings = await API.get('/settings');
   if (savedSettings) {
@@ -1324,9 +1234,7 @@ async function init() {
     panicPassword = savedSettings.panicPassword || '';
     const msgEl = document.getElementById('sosMsg');
     if (msgEl && savedSettings.sosMessage) msgEl.value = savedSettings.sosMessage;
-    if (panicPassword) {
-      document.getElementById('panicStatus').textContent = `✅ Password set (${panicPassword.length} chars)`;
-    }
+    if (panicPassword) document.getElementById('panicStatus').textContent = `✅ Password set (${panicPassword.length} chars)`;
   }
   applySettingsToUI();
   updateThresh();
@@ -1345,9 +1253,6 @@ async function init() {
   addEvent('SheSafe × SensorApp ready 🌸 — waiting for Android connection', 'ok', 'info');
 }
 
-// ─────────────────────────────────────────────────────
-//  NAVIGATION
-// ─────────────────────────────────────────────────────
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -1355,11 +1260,6 @@ function showPage(name) {
   document.getElementById('nav'  + name).classList.add('active');
 }
 
-// ─────────────────────────────────────────────────────
-//  MONITORING TOGGLE  (arms/disarms SOS detection)
-//  Sensor data still streams regardless — toggle just
-//  controls whether threshold breaches fire SOS.
-// ─────────────────────────────────────────────────────
 function toggleMonitoring() {
   monitoring = !monitoring;
   if (monitoring) {
@@ -1383,13 +1283,7 @@ function toggleMonitoring() {
   }
 }
 
-// ─────────────────────────────────────────────────────
-//  CHARTS (canvas sparklines)
-// ─────────────────────────────────────────────────────
-function pushHistory(arr, val) {
-  arr.push(val);
-  if (arr.length > HIST) arr.shift();
-}
+function pushHistory(arr, val) { arr.push(val); if (arr.length > HIST) arr.shift(); }
 
 function initCharts() {
   for (let i=0; i<HIST; i++) { accelHist.push(0); gyroHist.push(0); soundHist.push(30); }
@@ -1403,14 +1297,11 @@ function drawSparkline(canvasId, data, color, threshold, minY, maxY) {
   canvas.width = W * devicePixelRatio; canvas.height = H * devicePixelRatio;
   ctx.scale(devicePixelRatio, devicePixelRatio);
   ctx.clearRect(0, 0, W, H);
-
   const n = data.length;
   if (!n) return;
   const lo = minY || 0;
   const hi = maxY || (Math.max(...data, threshold || 0) * 1.2 || 1);
   const xStep = W / Math.max(n-1, 1);
-
-  // Fill area
   ctx.beginPath();
   ctx.moveTo(0, H);
   data.forEach((v, i) => {
@@ -1422,32 +1313,20 @@ function drawSparkline(canvasId, data, color, threshold, minY, maxY) {
   ctx.closePath();
   const grad = ctx.createLinearGradient(0, 0, 0, H);
   grad.addColorStop(0, color + '55'); grad.addColorStop(1, color + '08');
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  // Line
+  ctx.fillStyle = grad; ctx.fill();
   ctx.beginPath();
   data.forEach((v, i) => {
     const x = i * xStep;
     const y = H - ((v - lo) / (hi - lo)) * H;
     if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
   });
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
-  ctx.lineJoin = 'round';
-  ctx.stroke();
-
-  // Threshold line
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.stroke();
   if (threshold !== undefined) {
     const ty = H - ((threshold - lo) / (hi - lo)) * H;
     if (ty > 0 && ty < H) {
-      ctx.beginPath();
-      ctx.moveTo(0, ty); ctx.lineTo(W, ty);
-      ctx.strokeStyle = 'rgba(217,79,107,0.4)';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([4,4]);
-      ctx.stroke();
-      ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(0, ty); ctx.lineTo(W, ty);
+      ctx.strokeStyle = 'rgba(217,79,107,0.4)'; ctx.lineWidth = 1;
+      ctx.setLineDash([4,4]); ctx.stroke(); ctx.setLineDash([]);
     }
   }
 }
@@ -1460,9 +1339,6 @@ function startChartLoop() {
   }, 250);
 }
 
-// ─────────────────────────────────────────────────────
-//  SENSOR CARDS
-// ─────────────────────────────────────────────────────
 function updateCard(type, value, pct, triggered) {
   const card = document.getElementById('card'+type);
   const val  = document.getElementById('val'+type);
@@ -1477,12 +1353,9 @@ function updateCard(type, value, pct, triggered) {
 
 function resetCards() {
   ['Accel','Gyro','Sound','GPS'].forEach(t => {
-    const el = document.getElementById('card'+t);
-    if (el) el.className = 'card';
-    const v = document.getElementById('val'+t);
-    if (v) v.textContent = '—';
-    const b = document.getElementById('bar'+t);
-    if (b) b.style.width = '0%';
+    const el = document.getElementById('card'+t); if (el) el.className = 'card';
+    const v = document.getElementById('val'+t); if (v) v.textContent = '—';
+    const b = document.getElementById('bar'+t); if (b) b.style.width = '0%';
   });
 }
 
@@ -1491,15 +1364,11 @@ function updateRaw(key, val) {
   if (el) el.textContent = val;
 }
 
-// ─────────────────────────────────────────────────────
-//  LOCATION
-// ─────────────────────────────────────────────────────
 function shareLocation() {
   if (!gpsLat) { showToast('📍 GPS not acquired yet — start monitoring first'); return; }
   const url = `https://maps.google.com/?q=${gpsLat},${gpsLon}`;
   const el = document.getElementById('locationLink');
-  el.textContent = url;
-  el.classList.add('show');
+  el.textContent = url; el.classList.add('show');
   copyLocationLink();
 }
 
@@ -1509,13 +1378,9 @@ function copyLocationLink() {
   navigator.clipboard?.writeText(el.textContent).then(() => showToast('📋 Location link copied!'));
 }
 
-// ─────────────────────────────────────────────────────
-//  SOS FLOW
-// ─────────────────────────────────────────────────────
 function triggerSOS(reason) {
   if (sosActive || cooldownActive || !monitoring) return;
-  sosActive = true;
-  countdownVal = 10;
+  sosActive = true; countdownVal = 10;
   addEvent(reason, 'danger', 'sos');
   playAlert('detect');
   document.getElementById('sosOverlay').classList.add('show');
@@ -1540,14 +1405,10 @@ function updateCountdown(n) {
 }
 
 function cancelSOS() {
-  sosActive = false;
-  clearInterval(countInterval);
+  sosActive = false; clearInterval(countInterval);
   document.getElementById('sosOverlay').classList.remove('show');
   document.getElementById('shieldBtn').classList.remove('sos-active');
-  if (monitoring) {
-    document.getElementById('shieldLabel').textContent = 'Protecting';
-    setStatus('active', 'Active');
-  }
+  if (monitoring) { document.getElementById('shieldLabel').textContent = 'Protecting'; setStatus('active', 'Active'); }
   if (navigator.vibrate) navigator.vibrate(0);
   playAlert('cancel');
   addEvent('SOS cancelled by user', 'warn', 'warn');
@@ -1564,7 +1425,6 @@ async function sendSOS() {
   const loc = gpsLat ? `https://maps.google.com/?q=${gpsLat},${gpsLon}` : 'Location unavailable';
   sosMsg_built = (document.getElementById('sosMsg').value || '').replace('{location}', loc);
   addEvent(`🆘 SOS — SMS opening for ${contacts.length} contact(s)`, 'danger', 'sos');
-
   const entry = {
     id: Date.now(), reason: sosMsg_built.slice(0,100),
     lat: gpsLat, lon: gpsLon,
@@ -1575,15 +1435,11 @@ async function sendSOS() {
   sosHistory.unshift(entry);
   if (sosHistory.length > 20) sosHistory.pop();
   renderSOSHistory();
-
   API.post('/sos-log', entry).catch(()=>{});
-
   document.getElementById('sosBanner').classList.add('show');
   setTimeout(() => document.getElementById('sosBanner').classList.remove('show'), 8000);
-
   if (!contacts.length) showNoContactsSOS();
   else startSMSQueue(sosMsg_built);
-
   if (settings.cooldown) {
     cooldownActive = true;
     addEvent('⏱️ Cooldown started (2 min)', 'warn', 'warn');
@@ -1591,9 +1447,6 @@ async function sendSOS() {
   }
 }
 
-// ─────────────────────────────────────────────────────
-//  SMS QUEUE
-// ─────────────────────────────────────────────────────
 function startSMSQueue(msg) {
   smsQueue = [...contacts]; smsQueueIdx = 0;
   document.getElementById('sosSendScreen').classList.add('show');
@@ -1688,9 +1541,6 @@ function closeSOSSendScreen() {
   document.getElementById('sosSendScreen').classList.remove('show');
 }
 
-// ─────────────────────────────────────────────────────
-//  CONTACTS
-// ─────────────────────────────────────────────────────
 function renderContacts() {
   const list = document.getElementById('contactList');
   list.innerHTML = '';
@@ -1716,11 +1566,8 @@ async function addContact() {
   if (!name || !numRaw) { showToast('⚠️ Enter name and phone number'); return; }
   const phone = code + numRaw;
   const newContact = await API.post('/contacts', {name, phone});
-  if (newContact && newContact.id) {
-    contacts.push(newContact);
-  } else {
-    contacts.push({id: Date.now(), name, phone});
-  }
+  if (newContact && newContact.id) { contacts.push(newContact); }
+  else { contacts.push({id: Date.now(), name, phone}); }
   document.getElementById('newName').value = '';
   document.getElementById('newPhone').value = '';
   renderContacts();
@@ -1737,9 +1584,6 @@ async function removeContact(id) {
   addEvent('Contact removed: ' + c.name, 'warn', 'warn');
 }
 
-// ─────────────────────────────────────────────────────
-//  TIMELINE
-// ─────────────────────────────────────────────────────
 function addEvent(msg, color, badge) {
   const time = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   events.unshift({msg, color, badge, time});
@@ -1783,9 +1627,6 @@ function renderSOSHistory() {
     </div>`).join('');
 }
 
-// ─────────────────────────────────────────────────────
-//  SETTINGS
-// ─────────────────────────────────────────────────────
 function toggle(key, id) {
   settings[key] = !settings[key];
   document.getElementById(id).classList.toggle('on', settings[key]);
@@ -1833,9 +1674,6 @@ function saveSettings() {
   API.post('/settings', payload).catch(()=>{});
 }
 
-// ─────────────────────────────────────────────────────
-//  PANIC PASSWORD
-// ─────────────────────────────────────────────────────
 function savePanicPassword() {
   const val = document.getElementById('panicPasswordInput').value.trim();
   if (!val || val.length < 3) { showToast('⚠️ Min 3 characters'); return; }
@@ -1861,9 +1699,6 @@ document.addEventListener('keypress', e => {
   }
 });
 
-// ─────────────────────────────────────────────────────
-//  TEST SOS
-// ─────────────────────────────────────────────────────
 function startTestSOS() {
   if (testMode || sosActive) return;
   testMode = true; testCount = 10;
@@ -1922,9 +1757,6 @@ function closeTestResult() {
   showToast("✅ Test complete — you're all set!");
 }
 
-// ─────────────────────────────────────────────────────
-//  SHAKE → CANCEL SOS (mirrored from SensorApp)
-// ─────────────────────────────────────────────────────
 window.addEventListener('devicemotion', e => {
   if (!sosActive) return;
   const a = e.accelerationIncludingGravity;
@@ -1933,9 +1765,6 @@ window.addEventListener('devicemotion', e => {
   if (mag > 28) cancelSOS();
 });
 
-// ─────────────────────────────────────────────────────
-//  STATUS + WAKE LOCK + AUDIO + TOAST
-// ─────────────────────────────────────────────────────
 function setStatus(type, text) {
   const pill = document.getElementById('statusPill');
   const dot  = document.getElementById('sdot');
@@ -1974,15 +1803,10 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-// Auto-save thresholds
 document.addEventListener('input', e => {
   if (['accelThresh','soundThresh','gyroThresh'].includes(e.target.id)) saveSettings();
 });
 
-// ─────────────────────────────────────────────────────
-//  START
-// ─────────────────────────────────────────────────────
-// ── Sidebar clock ──
 function updateSidebarClock() {
   const el = document.getElementById('sidebarClock');
   if (el) el.textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
@@ -1990,7 +1814,6 @@ function updateSidebarClock() {
 setInterval(updateSidebarClock, 1000);
 updateSidebarClock();
 
-// ── Page heading update ──
 const PAGE_HEADINGS = {Home:['Guard','Mode'],Dash:['Sensor','Streams'],Contacts:['Emergency','Contacts'],Settings:['App','Settings']};
 const _origShowPage = showPage;
 showPage = function(name) {
@@ -1999,7 +1822,6 @@ showPage = function(name) {
   if (h) document.getElementById('pageHeading').innerHTML = h[0]+' <span>'+h[1]+'</span>';
 };
 
-// ── Mirror WS badges to sensors page ──
 const _origSetWSBadge = setWSBadge;
 setWSBadge = function(connected) {
   _origSetWSBadge(connected);
@@ -2013,7 +1835,6 @@ setAndroidBadge = function(connected) {
   if (b2) { b2.className='ws-badge '+(connected?'connected':''); b2.innerHTML='<span class="ws-dot"></span>'+(connected?'Android live':'Android offline'); }
 };
 
-// ── Patch renderTimeline to update evCount badge ──
 const _origRenderTimeline = renderTimeline;
 renderTimeline = function() {
   _origRenderTimeline();
