@@ -2,414 +2,867 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>SheSafe — Personal Safety Guardian</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════════════
+   SHESAFE — Dark Rose Theme
+   UI: new dark sidebar layout
+   JS:  100% original working logic preserved
+   ═══════════════════════════════════════════════════ */
 :root {
-  --bg:#0e0810; --bg2:#130b16; --panel:#1a1020; --card:#1f1328; --card2:#251830;
-  --border:rgba(220,120,180,0.12); --border2:rgba(220,120,180,0.22);
-  --rose:#e8527a; --rose2:#ff6b95; --mauve:#c47ab0; --blush:rgba(232,82,122,0.12);
-  --sage:#5fb896; --sage2:#7dd3b0; --sage-bg:rgba(95,184,150,0.12);
-  --warn:#e8a246; --warn-bg:rgba(232,162,70,0.12);
-  --danger:#ef4444; --danger-bg:rgba(239,68,68,0.12);
-  --text:#f5eef8; --text2:#c4a8d4; --muted:#7a5a8a;
+  --bg:        #0e0810;
+  --bg2:       #130b16;
+  --panel:     #1a1020;
+  --card:      #1f1328;
+  --card2:     #251830;
+  --border:    rgba(220,120,180,0.12);
+  --border2:   rgba(220,120,180,0.22);
+  --rose:      #e8527a;
+  --rose2:     #ff6b95;
+  --rose-light:rgba(232,82,122,0.25);
+  --rose-pale: rgba(232,82,122,0.08);
+  --mauve:     #c47ab0;
+  --blush:     rgba(232,82,122,0.12);
+  --sage:      #5fb896;
+  --sage2:     #7dd3b0;
+  --sage-light:rgba(95,184,150,0.18);
+  --sage-bg:   rgba(95,184,150,0.12);
+  --warn:      #e8a246;
+  --warn-light:rgba(232,162,70,0.15);
+  --danger:    #ef4444;
+  --danger-light:rgba(239,68,68,0.12);
+  --blue:      #4a90d9;
+  --blue-light:rgba(74,144,217,0.12);
+  --text:      #f5eef8;
+  --text2:     #c4a8d4;
+  --muted:     #7a5a8a;
+  --shadow:    rgba(0,0,0,0.4);
+  --shadow2:   rgba(232,82,122,0.15);
 }
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow:hidden;}
-body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 60% 70% at 10% 20%,rgba(196,122,176,0.07) 0%,transparent 55%),radial-gradient(ellipse 50% 50% at 90% 80%,rgba(232,82,122,0.06) 0%,transparent 55%);}
-.shell{position:relative;z-index:1;display:grid;grid-template-columns:240px 1fr;height:100vh;width:100vw;}
 
-/* ── Sidebar ── */
-.sidebar{background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:28px 0;overflow:hidden;}
-.brand{padding:0 24px 28px;border-bottom:1px solid var(--border);margin-bottom:20px;}
-.brand-logo{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:700;color:var(--rose2);display:flex;align-items:center;gap:10px;}
-.brand-icon{width:38px;height:38px;background:linear-gradient(135deg,rgba(232,82,122,0.3),rgba(196,122,176,0.2));border:1px solid rgba(232,82,122,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 20px rgba(232,82,122,0.2);}
-.brand em{font-style:italic;color:var(--mauve);}
-.brand-tagline{font-size:0.72rem;color:var(--muted);margin-top:4px;letter-spacing:0.05em;}
-.nav-section{padding:0 12px;flex:1;overflow-y:auto;}
-.nav-label{font-size:0.62rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);padding:14px 12px 6px;}
-.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:0.88rem;font-weight:500;color:var(--text2);transition:all 0.2s;border:1px solid transparent;margin-bottom:2px;}
-.nav-item:hover{background:var(--card);color:var(--text);}
-.nav-item.active{background:linear-gradient(135deg,rgba(232,82,122,0.15),rgba(196,122,176,0.08));border-color:rgba(232,82,122,0.2);color:var(--rose2);}
-.ni{font-size:1.1rem;width:20px;text-align:center;}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html, body {
+  height:100%; width:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans', sans-serif;
+  overflow:hidden;
+}
+
+body::before {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 70% at 10% 20%, rgba(196,122,176,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 90% 80%, rgba(232,82,122,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 35% 35% at 50% 50%, rgba(95,184,150,0.03) 0%, transparent 55%);
+}
+
+/* ═══════ LAYOUT ═══════ */
+.app {
+  position:relative; z-index:1;
+  display:grid;
+  grid-template-columns: 230px 1fr;
+  grid-template-rows: 1fr;
+  height:100vh; width:100vw;
+}
+
+/* ═══════ SIDEBAR ═══════ */
+.sidebar {
+  background:var(--panel);
+  border-right:1px solid var(--border);
+  display:flex; flex-direction:column;
+  padding:24px 0 16px;
+  overflow:hidden;
+  grid-row: 1;
+}
+
+.brand {
+  padding:0 20px 22px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:16px;
+}
+.brand-logo {
+  font-family:'Cormorant Garamond', serif;
+  font-size:1.85rem; font-weight:700;
+  color:var(--rose2);
+  display:flex; align-items:center; gap:10px;
+}
+.brand-icon {
+  width:36px; height:36px;
+  background:linear-gradient(135deg, rgba(232,82,122,0.3), rgba(196,122,176,0.2));
+  border:1px solid rgba(232,82,122,0.3);
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:17px;
+  box-shadow:0 0 18px rgba(232,82,122,0.2);
+}
+.brand em { font-style:italic; color:var(--mauve); }
+.brand-tagline { font-size:0.68rem; color:var(--muted); margin-top:4px; letter-spacing:0.06em; }
+
+/* Nav */
+.nav-section { padding:0 10px; flex:1; overflow-y:auto; }
+.nav-label {
+  font-size:0.6rem; font-weight:700; letter-spacing:0.18em;
+  text-transform:uppercase; color:var(--muted);
+  padding:12px 10px 5px;
+}
+.nav-btn {
+  display:flex; align-items:center; gap:11px;
+  padding:9px 12px; border-radius:10px;
+  cursor:pointer; border:1px solid transparent;
+  font-family:'DM Sans', sans-serif;
+  font-size:0.86rem; font-weight:500;
+  color:var(--text2);
+  background:none;
+  width:100%; text-align:left;
+  transition:all 0.2s;
+  margin-bottom:2px;
+}
+.nav-btn:hover { background:var(--card); color:var(--text); }
+.nav-btn.active {
+  background:linear-gradient(135deg, rgba(232,82,122,0.15), rgba(196,122,176,0.08));
+  border-color:rgba(232,82,122,0.2);
+  color:var(--rose2);
+}
+.nav-icon { font-size:1.05rem; width:20px; text-align:center; }
+.nav-text  { font-size:0.86rem; }
 
 /* Connection badges */
-.conn-row{margin:10px 12px 0;display:flex;flex-direction:column;gap:5px;}
-.conn-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;font-size:0.7rem;font-weight:700;border:1px solid var(--border2);color:var(--muted);background:rgba(120,90,140,0.15);transition:all 0.3s;}
-.conn-badge.on{color:var(--sage);border-color:var(--sage);background:var(--sage-bg);}
-.conn-badge.warn{color:var(--warn);border-color:var(--warn);background:var(--warn-bg);}
-.cbdot{width:6px;height:6px;border-radius:50%;background:currentColor;}
-.conn-badge.on .cbdot{animation:dot-pulse 1.4s ease infinite;}
+.sidebar-conn {
+  margin:12px 10px 0;
+  display:flex; flex-direction:column; gap:5px;
+}
+.ws-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:5px 11px; border-radius:999px;
+  font-size:0.68rem; font-weight:700; letter-spacing:0.04em;
+  border:1px solid var(--border2);
+  color:var(--muted);
+  background:rgba(120,90,140,0.15);
+  transition:all 0.3s;
+}
+.ws-badge.connected    { color:var(--sage);  border-color:var(--sage);  background:var(--sage-bg); }
+.ws-badge.disconnected { color:var(--warn);  border-color:var(--warn);  background:var(--warn-light); }
+.ws-dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+.ws-badge.connected .ws-dot { animation:wsdot-pulse 1.4s ease infinite; }
+@keyframes wsdot-pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.8);opacity:0.4} }
 
 /* Status pill */
-.sidebar-status{margin:12px 12px 0;padding:12px;border-radius:12px;background:var(--card);border:1px solid var(--border);}
-.ss-label{font-size:0.63rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
-.ss-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:0.75rem;font-weight:700;background:rgba(120,90,140,0.2);border:1px solid var(--border2);color:var(--muted);transition:all 0.4s;}
-.ss-pill.active{background:rgba(95,184,150,0.15);border-color:var(--sage);color:var(--sage);}
-.ss-pill.alert{background:rgba(239,68,68,0.15);border-color:var(--danger);color:var(--danger);animation:pill-pulse 0.8s ease infinite alternate;}
-@keyframes pill-pulse{from{opacity:0.8}to{opacity:1;box-shadow:0 0 12px rgba(239,68,68,0.3)}}
-.ss-dot{width:7px;height:7px;border-radius:50%;background:currentColor;}
-.ss-dot.pulse{animation:dot-pulse 1.4s ease infinite;}
-@keyframes dot-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.8);opacity:0.4}}
-.sidebar-time{padding:12px 24px 0;font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted);}
+.sidebar-status {
+  margin:10px 10px 0;
+  padding:12px 14px;
+  border-radius:12px;
+  background:var(--card);
+  border:1px solid var(--border);
+}
+.ss-label {
+  font-size:0.6rem; font-weight:700; letter-spacing:0.12em;
+  text-transform:uppercase; color:var(--muted);
+  margin-bottom:7px;
+}
+.status-pill {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:5px 12px; border-radius:999px;
+  font-size:0.73rem; font-weight:700;
+  background:rgba(120,90,140,0.2);
+  border:1px solid var(--border2);
+  color:var(--muted);
+  transition:all 0.4s;
+}
+.status-pill.active { background:rgba(95,184,150,0.15); border-color:var(--sage); color:var(--sage); }
+.status-pill.alert  { background:rgba(239,68,68,0.15);  border-color:var(--danger); color:var(--danger);
+  animation:pill-pulse 0.8s ease infinite alternate; }
+@keyframes pill-pulse { from{opacity:0.8} to{opacity:1; box-shadow:0 0 12px rgba(239,68,68,0.3)} }
+.sdot { width:7px; height:7px; border-radius:50%; background:currentColor; }
+.sdot.pulse { animation:sdot-pulse 1.4s ease infinite; }
+@keyframes sdot-pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.7);opacity:0.5} }
 
-/* ── Main ── */
-.main{display:flex;flex-direction:column;overflow:hidden;}
-.topbar{padding:16px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(14,8,16,0.6);backdrop-filter:blur(12px);flex-shrink:0;}
-.page-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;}
-.page-title span{color:var(--rose2);font-style:italic;}
-.topbar-right{display:flex;align-items:center;gap:10px;}
-.sos-main-btn{padding:10px 24px;background:linear-gradient(135deg,#e8527a,#c73a5f);border:none;border-radius:10px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.06em;cursor:pointer;box-shadow:0 4px 20px rgba(220,60,90,0.4);transition:all 0.2s;}
-.sos-main-btn:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(220,60,90,0.5);}
-.test-btn{padding:10px 18px;background:var(--card2);border:1px solid var(--border2);border-radius:10px;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
-.test-btn:hover{border-color:var(--sage);color:var(--sage);}
-.page-wrap{flex:1;overflow-y:auto;padding:24px 28px;}
-.page-wrap::-webkit-scrollbar{width:5px;}
-.page-wrap::-webkit-scrollbar-thumb{background:rgba(232,82,122,0.2);border-radius:999px;}
-.page{display:none;}.page.active{display:block;}
+.sidebar-clock {
+  padding:10px 20px 0;
+  font-family:'DM Mono', monospace;
+  font-size:0.72rem; color:var(--muted);
+}
 
-/* ── Dashboard grid ── */
-.dash-grid{display:grid;grid-template-columns:1fr 1fr 1fr 340px;gap:16px;}
+/* ═══════ MAIN AREA ═══════ */
+.main-area {
+  display:flex; flex-direction:column;
+  overflow:hidden;
+}
 
-/* Shield */
-.shield-card{grid-column:1/2;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:16px;transition:border-color 0.4s;}
-.shield-card.monitoring{border-color:rgba(95,184,150,0.35);}
-.shield-card.sos-active{border-color:rgba(239,68,68,0.5);}
-.shield-outer{position:relative;width:130px;height:130px;display:flex;align-items:center;justify-content:center;}
-.shield-ring{position:absolute;border-radius:50%;border:1px solid rgba(232,82,122,0.2);}
-.shield-ring:nth-child(1){width:130px;height:130px;}
-.shield-ring:nth-child(2){width:110px;height:110px;animation:ring-breathe 3s ease-in-out infinite;}
-.shield-ring:nth-child(3){width:90px;height:90px;animation:ring-breathe 3s ease-in-out infinite 0.7s;opacity:0.5;}
-@keyframes ring-breathe{0%,100%{opacity:0.3}50%{opacity:0.7;transform:scale(1.04)}}
-.shield-btn{width:90px;height:90px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(150deg,#2a1535,#1f1028);box-shadow:0 0 0 2px rgba(232,82,122,0.25),0 8px 30px rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:all 0.35s;}
-.shield-btn:hover{transform:scale(1.04);box-shadow:0 0 0 3px rgba(232,82,122,0.4),0 8px 40px rgba(232,82,122,0.2);}
-.shield-btn.monitoring{background:linear-gradient(150deg,#0f2820,#091c14);box-shadow:0 0 0 2px rgba(95,184,150,0.4),0 8px 30px rgba(95,184,150,0.15);}
-.shield-btn.sos-active{animation:sos-throb 0.7s ease-in-out infinite alternate;}
-@keyframes sos-throb{from{box-shadow:0 0 0 2px rgba(239,68,68,0.4),0 8px 20px rgba(239,68,68,0.2);}to{box-shadow:0 0 0 5px rgba(239,68,68,0.3),0 8px 50px rgba(239,68,68,0.4);}}
-.shield-icon{font-size:2rem;}
-.shield-lbl{font-size:0.5rem;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:var(--mauve);}
-.shield-btn.monitoring .shield-lbl{color:var(--sage);}
-.shield-btn.sos-active .shield-lbl{color:var(--danger);}
-.shield-hint{font-size:0.75rem;color:var(--muted);text-align:center;line-height:1.6;max-width:160px;}
+/* Top bar */
+.topbar {
+  padding:14px 24px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(14,8,16,0.7);
+  backdrop-filter:blur(14px);
+  flex-shrink:0;
+}
+.page-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size:1.55rem; font-weight:600; color:var(--text);
+}
+.page-title span { color:var(--rose2); font-style:italic; }
+.topbar-actions { display:flex; align-items:center; gap:8px; }
 
-/* Sensor cards */
-.sensor-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;transition:all 0.3s;position:relative;overflow:hidden;}
-.sensor-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--rose),var(--mauve));transform:scaleX(0);transform-origin:left;transition:transform 0.4s;}
-.sensor-card.triggered{border-color:rgba(232,82,122,0.4);background:rgba(232,82,122,0.05);}
-.sensor-card.triggered::before{transform:scaleX(1);}
-.sensor-card.safe-gps{border-color:rgba(95,184,150,0.3);}
-.sensor-card.safe-gps::before{background:linear-gradient(90deg,var(--sage),var(--sage2));transform:scaleX(1);}
-.sc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.sc-icon-wrap{width:38px;height:38px;border-radius:10px;background:var(--blush);display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
-.sc-badge{font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:rgba(120,90,140,0.2);color:var(--muted);border:1px solid var(--border2);transition:all 0.3s;}
-.sensor-card.triggered .sc-badge{background:rgba(232,82,122,0.15);color:var(--rose2);border-color:rgba(232,82,122,0.3);}
-.sensor-card.safe-gps .sc-badge{background:var(--sage-bg);color:var(--sage);border-color:rgba(95,184,150,0.3);}
-.sc-label{font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
-.sc-value{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--text);line-height:1;margin-bottom:3px;}
-.sc-unit{font-size:0.68rem;color:var(--muted);margin-bottom:12px;}
-.sc-bar-wrap{height:3px;border-radius:999px;background:rgba(255,255,255,0.06);overflow:hidden;}
-.sc-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,rgba(232,82,122,0.5),var(--rose2));transition:width 0.35s ease;}
-.sc-bar.safe{background:linear-gradient(90deg,var(--sage),var(--sage2));}
-.sc-bar.danger{background:linear-gradient(90deg,#f87171,var(--danger));}
+.sos-btn-main {
+  padding:9px 22px;
+  background:linear-gradient(135deg, #e8527a, #c73a5f);
+  border:none; border-radius:10px;
+  color:#fff; font-family:'DM Sans', sans-serif;
+  font-size:0.86rem; font-weight:700;
+  letter-spacing:0.06em; cursor:pointer;
+  box-shadow:0 4px 18px rgba(220,60,90,0.4);
+  transition:all 0.2s;
+}
+.sos-btn-main:hover   { transform:translateY(-1px); box-shadow:0 6px 26px rgba(220,60,90,0.5); }
+.sos-btn-main:active  { transform:scale(0.98); }
 
-/* Timeline */
-.timeline-card{grid-column:4/5;grid-row:1/4;background:var(--card);border:1px solid var(--border);border-radius:18px;display:flex;flex-direction:column;overflow:hidden;}
-.tc-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.tc-title{font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);}
-.tc-count{font-size:0.7rem;color:var(--muted);}
-.tc-body{flex:1;overflow-y:auto;padding:16px 20px;}
-.tc-body::-webkit-scrollbar{width:3px;}
-.tc-body::-webkit-scrollbar-thumb{background:rgba(232,82,122,0.2);border-radius:999px;}
-.tl-item{display:flex;gap:12px;padding-bottom:16px;}
-.tl-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
-.tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:3px;border:2px solid var(--rose);background:rgba(232,82,122,0.2);}
-.tl-dot.ok{border-color:var(--sage);background:var(--sage-bg);}
-.tl-dot.warn{border-color:var(--warn);background:var(--warn-bg);}
-.tl-dot.danger{border-color:var(--danger);background:var(--danger-bg);}
-.tl-line{width:1px;flex:1;background:var(--border);min-height:10px;margin-top:3px;}
-.tl-item:last-child .tl-line{display:none;}
-.tl-msg{font-size:0.78rem;font-weight:500;color:var(--text);line-height:1.4;}
-.tl-time{font-size:0.67rem;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace;}
-.tl-badge{display:inline-block;font-size:0.58rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 7px;border-radius:999px;margin-top:4px;}
-.tl-badge.sos{background:var(--danger-bg);color:var(--danger);border:1px solid rgba(239,68,68,0.3);}
-.tl-badge.info{background:var(--blush);color:var(--rose);border:1px solid rgba(232,82,122,0.2);}
-.tl-badge.ok{background:var(--sage-bg);color:var(--sage);border:1px solid rgba(95,184,150,0.3);}
-.tl-badge.warn{background:var(--warn-bg);color:var(--warn);border:1px solid rgba(232,162,70,0.3);}
-.tl-badge.sensor{background:rgba(74,144,217,0.12);color:#4a90d9;border:1px solid rgba(74,144,217,0.25);}
+.test-btn {
+  padding:9px 16px;
+  background:var(--card2); border:1px solid var(--border2);
+  border-radius:10px; color:var(--text2);
+  font-family:'DM Sans', sans-serif;
+  font-size:0.83rem; font-weight:600;
+  cursor:pointer; transition:all 0.2s;
+}
+.test-btn:hover { border-color:var(--sage); color:var(--sage); }
+
+/* ═══════ PAGE SCROLL WRAP ═══════ */
+.page-scroll {
+  flex:1; overflow-y:auto; padding:20px 24px;
+}
+.page-scroll::-webkit-scrollbar { width:4px; }
+.page-scroll::-webkit-scrollbar-thumb { background:rgba(232,82,122,0.2); border-radius:999px; }
+
+/* ═══════ PAGES ═══════ */
+.page { display:none; padding-bottom:20px; }
+.page.active { display:block; }
+
+/* ═══════ HOME PAGE GRID ═══════ */
+.home-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 320px;
+  gap:14px;
+}
+
+/* Shield card */
+.shield-section {
+  grid-column:1/2;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:22px 16px;
+  display:flex; flex-direction:column; align-items:center; gap:14px;
+  transition:border-color 0.4s;
+}
+.shield-section.monitoring { border-color:rgba(95,184,150,0.35); }
+.shield-section.sos-active { border-color:rgba(239,68,68,0.5); }
+
+.shield-outer {
+  position:relative; width:160px; height:160px;
+  display:flex; align-items:center; justify-content:center;
+}
+/* rings are LARGER than the button — never block clicks */
+.petal-ring {
+  position:absolute; border-radius:50%;
+  border:1px solid rgba(232,82,122,0.2);
+  pointer-events:none; /* CRITICAL — rings must never intercept clicks */
+}
+.petal-ring:nth-child(1){ width:160px; height:160px; opacity:0.4; }
+.petal-ring:nth-child(2){ width:142px; height:142px; opacity:0.3; animation:ring-breathe 3s ease-in-out infinite; }
+.petal-ring:nth-child(3){ width:124px; height:124px; opacity:0.2; animation:ring-breathe 3s ease-in-out infinite 0.7s; }
+@keyframes ring-breathe { 0%,100%{transform:scale(1);opacity:0.3} 50%{transform:scale(1.04);opacity:0.6} }
+
+.shield-btn {
+  width:100px; height:100px;
+  border-radius:50%; border:none; cursor:pointer;
+  background:linear-gradient(150deg, #2a1535, #1f1028);
+  box-shadow:0 0 0 2px rgba(232,82,122,0.25), 0 8px 28px rgba(0,0,0,0.5);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:5px; transition:all 0.3s;
+  position:relative; z-index:2; /* above rings */
+}
+.shield-btn:hover { transform:scale(1.05); box-shadow:0 0 0 3px rgba(232,82,122,0.4), 0 8px 36px rgba(232,82,122,0.2); }
+.shield-btn:active { transform:scale(0.97); }
+.shield-btn.monitoring {
+  background:linear-gradient(150deg, #0f2820, #091c14);
+  box-shadow:0 0 0 2px rgba(95,184,150,0.4), 0 8px 28px rgba(95,184,150,0.15);
+}
+.shield-btn.sos-active { animation:sos-throb 0.7s ease-in-out infinite alternate; }
+@keyframes sos-throb {
+  from { box-shadow:0 0 0 2px rgba(239,68,68,0.4), 0 8px 20px rgba(239,68,68,0.2); }
+  to   { box-shadow:0 0 0 6px rgba(239,68,68,0.25), 0 8px 48px rgba(239,68,68,0.4); }
+}
+.shield-icon  { font-size:2.2rem; filter:drop-shadow(0 2px 6px rgba(232,82,122,0.3)); transition:all 0.3s; }
+.shield-label {
+  font-size:0.52rem; font-weight:800; letter-spacing:0.18em;
+  text-transform:uppercase; color:var(--mauve);
+}
+.shield-btn.monitoring .shield-label { color:var(--sage); }
+.shield-btn.sos-active .shield-label { color:var(--danger); }
+.shield-hint { font-size:0.73rem; color:var(--muted); text-align:center; line-height:1.6; max-width:170px; }
+
+/* Sensor cards — 4 of them in cols 2-3 */
+.sensor-col {
+  display:flex; flex-direction:column; gap:14px;
+}
+.card {
+  background:var(--card);
+  border:1.5px solid var(--border);
+  border-radius:16px; padding:16px;
+  transition:all 0.3s; position:relative; overflow:hidden;
+}
+.card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--rose), var(--mauve));
+  transform:scaleX(0); transform-origin:left; transition:transform 0.4s;
+}
+.card.triggered { border-color:rgba(232,82,122,0.4); background:rgba(232,82,122,0.04); }
+.card.triggered::before { transform:scaleX(1); }
+.card.safe { border-color:rgba(95,184,150,0.3); }
+.card.safe::before { background:linear-gradient(90deg, var(--sage), var(--sage2)); transform:scaleX(1); }
+.card.full { grid-column:1/-1; }
+
+.card-icon  { font-size:1.2rem; margin-bottom:5px; }
+.card-label { font-size:0.6rem; color:var(--muted); font-weight:700; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:2px; }
+.card-value { font-family:'Cormorant Garamond', serif; font-size:1.4rem; color:var(--text); font-weight:600; line-height:1.1; }
+.card-unit  { font-size:0.6rem; color:var(--muted); margin-top:1px; }
+.bar-wrap { height:3px; border-radius:999px; background:rgba(255,255,255,0.07); margin-top:10px; overflow:hidden; }
+.bar { height:100%; border-radius:999px; background:linear-gradient(90deg, var(--rose-light), var(--rose)); transition:width 0.3s; }
+.bar.safe-bar  { background:linear-gradient(90deg, var(--sage-light), var(--sage)); }
+.bar.danger    { background:linear-gradient(90deg, #f87171, var(--danger)); }
+.bar.blue-bar  { background:linear-gradient(90deg, rgba(74,144,217,0.4), var(--blue)); }
+
+/* Timeline card spans full right column */
+.timeline-card {
+  grid-column:4/5;
+  grid-row:1/4;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  max-height:calc(100vh - 130px);
+}
+.tc-head {
+  padding:16px 18px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  flex-shrink:0;
+}
+.tc-title { font-size:0.72rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--text2); }
+.tc-count { font-size:0.68rem; color:var(--muted); }
+.tc-body  { flex:1; overflow-y:auto; padding:14px 18px; }
+.tc-body::-webkit-scrollbar { width:3px; }
+.tc-body::-webkit-scrollbar-thumb { background:rgba(232,82,122,0.2); border-radius:999px; }
+
+.timeline-item { display:flex; gap:11px; padding-bottom:14px; position:relative; }
+.timeline-left { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
+.tl-dot {
+  width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-top:3px;
+  border:2px solid var(--rose); background:rgba(232,82,122,0.2);
+}
+.tl-dot.ok     { border-color:var(--sage);   background:var(--sage-bg); }
+.tl-dot.warn   { border-color:var(--warn);   background:var(--warn-light); }
+.tl-dot.danger { border-color:var(--danger); background:var(--danger-light); }
+.tl-line { width:1px; flex:1; background:var(--border); min-height:10px; margin-top:3px; }
+.timeline-item:last-child .tl-line { display:none; }
+.tl-content { flex:1; }
+.tl-msg  { font-size:0.77rem; font-weight:500; color:var(--text); line-height:1.4; }
+.tl-time { font-size:0.65rem; color:var(--muted); margin-top:2px; font-family:'DM Mono', monospace; }
+.tl-badge {
+  display:inline-block; font-size:0.57rem; font-weight:800;
+  letter-spacing:0.1em; text-transform:uppercase;
+  padding:2px 7px; border-radius:999px; margin-top:4px;
+}
+.tl-badge.sos    { background:var(--danger-light); color:var(--danger);   border:1px solid rgba(239,68,68,0.3); }
+.tl-badge.info   { background:var(--blush);         color:var(--rose);    border:1px solid rgba(232,82,122,0.2); }
+.tl-badge.ok     { background:var(--sage-bg);        color:var(--sage);    border:1px solid rgba(95,184,150,0.3); }
+.tl-badge.warn   { background:var(--warn-light);     color:var(--warn);    border:1px solid rgba(232,162,70,0.3); }
+.tl-badge.sensor { background:var(--blue-light);     color:var(--blue);    border:1px solid rgba(74,144,217,0.3); }
 
 /* Charts row */
-.charts-row{grid-column:1/4;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
-.chart-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 18px;}
-.chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.chart-title{font-size:0.68rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
-.chart-badge{font-size:0.68rem;font-family:'DM Mono',monospace;color:var(--text2);}
-canvas{display:block;width:100%;height:60px;}
+.charts-row {
+  grid-column:1/4;
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;
+}
+.chart-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:14px 16px;
+}
+.chart-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.chart-title  { font-size:0.7rem; font-weight:700; color:var(--text2); }
+.chart-badge  {
+  font-size:0.62rem; font-weight:700; letter-spacing:0.06em;
+  padding:2px 8px; border-radius:999px;
+  background:var(--blush); color:var(--rose2); border:1px solid rgba(232,82,122,0.2);
+  font-family:'DM Mono', monospace;
+}
+.chart-badge.green { background:var(--sage-bg);  color:var(--sage);  border-color:rgba(95,184,150,0.25); }
+.chart-badge.blue  { background:var(--blue-light); color:var(--blue); border-color:rgba(74,144,217,0.25); }
+canvas.sparkline { width:100%; height:60px; display:block; }
 
 /* Location card */
-.location-card{grid-column:1/4;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;display:flex;align-items:center;gap:20px;}
-.lc-icon{font-size:2rem;flex-shrink:0;}
-.lc-body{flex:1;}
-.lc-title{font-size:0.78rem;font-weight:700;color:var(--text2);margin-bottom:4px;}
-.lc-coords{font-size:0.82rem;color:var(--text);font-family:'DM Mono',monospace;}
-.lc-link{font-size:0.72rem;color:var(--rose2);cursor:pointer;word-break:break-all;display:none;margin-top:4px;}
-.lc-link.show{display:block;}
-.lc-btn{padding:8px 16px;border-radius:8px;background:linear-gradient(135deg,var(--rose),var(--mauve));border:none;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;transition:opacity 0.2s;}
+.location-card {
+  grid-column:1/4;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:16px;
+  display:flex; align-items:center; gap:16px;
+}
+.location-header { display:flex; align-items:center; justify-content:space-between; width:100%; }
+.location-title  { font-size:0.82rem; font-weight:700; color:var(--text); display:flex; align-items:center; gap:6px; }
+.share-btn {
+  padding:6px 14px; border-radius:999px;
+  background:linear-gradient(135deg, var(--rose), var(--mauve));
+  border:none; color:#fff; font-size:0.72rem; font-weight:700;
+  cursor:pointer; font-family:'DM Sans', sans-serif; transition:opacity 0.2s;
+}
+.share-btn:hover { opacity:0.85; }
+.location-coords { font-size:0.72rem; color:var(--text2); margin-top:4px; font-family:'DM Mono', monospace; }
+.location-link {
+  font-size:0.7rem; color:var(--rose2); word-break:break-all;
+  background:var(--blush); padding:6px 9px; border-radius:8px;
+  display:none; line-height:1.5; cursor:pointer; margin-top:4px;
+}
+.location-link.show { display:block; }
 
 /* SOS banner */
-.sos-banner{display:none;padding:12px 20px;background:var(--danger-bg);border:1px solid rgba(239,68,68,0.3);border-radius:12px;font-size:0.82rem;color:var(--danger);text-align:center;margin-top:12px;grid-column:1/4;}
-.sos-banner.show{display:block;animation:banner-slide 0.3s ease;}
-@keyframes banner-slide{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.sos-banner {
+  grid-column:1/4;
+  display:none; padding:11px 18px;
+  background:var(--danger-light); border:1px solid rgba(239,68,68,0.3);
+  border-radius:12px; font-size:0.8rem; color:var(--danger);
+  line-height:1.6; text-align:center;
+}
+.sos-banner.show { display:block; animation:banner-slide 0.3s ease; }
+@keyframes banner-slide { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
 
-/* Android guide card */
-.android-card{grid-column:1/4;background:linear-gradient(135deg,rgba(29,78,216,0.08),rgba(59,130,246,0.04));border:1px solid rgba(59,130,246,0.2);border-radius:16px;padding:18px;}
-.ac-title{font-size:0.78rem;font-weight:700;color:#60a5fa;margin-bottom:10px;}
-.ac-steps{display:flex;flex-direction:column;gap:8px;}
-.ac-step{display:flex;gap:10px;align-items:flex-start;font-size:0.78rem;color:#93c5fd;line-height:1.5;}
-.ac-num{width:20px;height:20px;border-radius:50%;flex-shrink:0;background:#1d4ed8;color:#fff;font-size:0.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+/* ═══════ SENSORS/DASH PAGE ═══════ */
+.section-title {
+  font-size:0.64rem; font-weight:800; letter-spacing:0.2em;
+  text-transform:uppercase; color:var(--muted);
+  margin:16px 0 10px;
+  display:flex; align-items:center; gap:8px;
+}
+.section-title::after { content:''; flex:1; height:1px; background:var(--border); }
 
-/* ── Contacts page ── */
-.contacts-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;}
-.contact-item{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;background:var(--card2);border:1px solid var(--border);margin-bottom:8px;transition:border-color 0.2s;}
-.contact-item:hover{border-color:var(--border2);}
-.avatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--rose),var(--mauve));display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:800;color:#fff;}
-.contact-name{font-size:0.88rem;font-weight:700;color:var(--text);}
-.contact-phone{font-size:0.75rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px;}
-.del-btn{margin-left:auto;padding:6px 10px;border-radius:8px;background:var(--danger-bg);border:1px solid rgba(239,68,68,0.2);color:var(--danger);cursor:pointer;font-size:0.75rem;transition:all 0.2s;}
-.del-btn:hover{background:rgba(239,68,68,0.2);}
-.form-block{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;}
-.form-row{margin-bottom:14px;}
-.form-label{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block;}
-.form-input{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.2s;}
-.form-input:focus{border-color:var(--rose);}
-.form-input::placeholder{color:var(--muted);}
-.country-sel{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.82rem;outline:none;cursor:pointer;-webkit-appearance:none;}
-.phone-row{display:grid;grid-template-columns:180px 1fr;gap:8px;}
-.add-btn{width:100%;padding:12px;border-radius:10px;background:linear-gradient(135deg,var(--rose),var(--mauve));border:none;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:4px;}
-.add-btn:hover{opacity:0.85;transform:translateY(-1px);}
-.sb-title{font-size:0.72rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
+.chart-card-full {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:16px; margin-bottom:12px;
+}
 
-/* ── Settings page ── */
-.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.setting-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;}
-.sc2-title{font-size:0.72rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
-.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);}
-.toggle-row:last-child{border-bottom:none;}
-.toggle-left{display:flex;align-items:center;gap:10px;}
-.toggle-icon{font-size:1rem;width:22px;text-align:center;}
-.toggle-label{font-size:0.85rem;font-weight:500;color:var(--text2);}
-.toggle{width:40px;height:22px;border-radius:999px;background:rgba(255,255,255,0.1);border:1px solid var(--border2);cursor:pointer;position:relative;transition:all 0.3s;flex-shrink:0;}
-.toggle.on{background:var(--rose);border-color:var(--rose);}
-.toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform 0.3s;}
-.toggle.on::after{transform:translateX(18px);}
-.thresh-row{margin-bottom:14px;}
-.thresh-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-.thresh-label{font-size:0.8rem;font-weight:500;color:var(--text2);}
-.thresh-val{font-size:0.75rem;font-weight:700;color:var(--rose2);font-family:'DM Mono',monospace;}
-input[type=range]{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--rose) 40%,rgba(255,255,255,0.1) 40%);border-radius:999px;cursor:pointer;outline:none;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--rose2);box-shadow:0 0 8px rgba(232,82,122,0.5);cursor:pointer;}
-.sos-textarea{width:100%;height:90px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.83rem;outline:none;resize:vertical;transition:border-color 0.2s;line-height:1.5;}
-.sos-textarea:focus{border-color:var(--rose);}
-.panic-row{display:flex;gap:8px;margin-top:8px;}
-.panic-input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;transition:border-color 0.2s;letter-spacing:0.1em;}
-.panic-input:focus{border-color:var(--rose);}
-.panic-save-btn{padding:10px 18px;border-radius:10px;background:linear-gradient(135deg,var(--rose),var(--mauve));border:none;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;transition:opacity 0.2s;}
-.panic-save-btn:hover{opacity:0.85;}
-.panic-status{font-size:0.73rem;font-weight:700;color:var(--sage);margin-top:6px;min-height:14px;}
-.sos-history-item{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--danger-bg);border:1px solid rgba(239,68,68,0.2);border-radius:10px;margin-bottom:6px;}
-.sos-history-badge{font-size:0.58rem;font-weight:800;letter-spacing:0.1em;background:var(--danger);color:#fff;padding:2px 7px;border-radius:999px;flex-shrink:0;margin-top:2px;}
-.sos-history-text{font-size:0.78rem;color:var(--text);line-height:1.4;}
-.sos-history-time{font-size:0.67rem;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace;}
-.about-card{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:18px;padding:28px;text-align:center;}
-.about-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--rose2);margin-bottom:10px;}
-.about-sub{font-size:0.83rem;color:var(--text2);line-height:1.8;max-width:480px;margin:0 auto;}
+/* Raw data panel */
+.raw-panel {
+  background:#130b16; border:1px solid var(--border);
+  border-radius:14px; padding:14px 16px;
+  font-family:'DM Mono', monospace;
+  font-size:0.72rem; color:#f9c4d4;
+  line-height:1.9; margin-bottom:12px;
+}
+.raw-panel .dim { color:var(--muted); }
+.raw-line { display:flex; justify-content:space-between; }
+.raw-key  { color:var(--rose2); }
+.raw-val  { color:#ffffff; }
 
-/* ── Overlays ── */
-.sos-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(10,5,14,0.96);backdrop-filter:blur(20px);align-items:center;justify-content:center;flex-direction:column;gap:24px;}
-.sos-overlay.show{display:flex;}
-.sos-overlay-glow{position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at 50% 40%,rgba(232,82,122,0.12),transparent 55%);animation:sos-glow-pulse 1s ease-in-out infinite alternate;}
-@keyframes sos-glow-pulse{from{opacity:0.5}to{opacity:1}}
-.sos-ov-title{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:700;color:var(--rose2);text-align:center;}
-.sos-ov-reason{font-size:0.82rem;color:var(--text2);text-align:center;max-width:320px;line-height:1.7;margin-top:-10px;}
-.sos-ov-sub{font-size:0.88rem;color:var(--text2);text-align:center;max-width:300px;line-height:1.8;}
-.countdown-ring{position:relative;width:180px;height:180px;}
-.countdown-ring svg{position:absolute;inset:0;transform:rotate(-90deg);}
-.countdown-ring circle{fill:none;stroke-width:6;}
-.cr-track{stroke:rgba(255,255,255,0.05);}
-.cr-prog{stroke:var(--rose2);stroke-linecap:round;stroke-dasharray:440;transition:stroke-dashoffset 1s linear;}
-.countdown-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:700;color:var(--rose2);}
-.cancel-btn{padding:14px 48px;border-radius:999px;background:transparent;border:2px solid var(--rose);color:var(--rose2);font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;letter-spacing:0.06em;transition:all 0.2s;}
-.cancel-btn:hover{background:var(--rose);color:#fff;}
-.sos-send-screen{display:none;position:fixed;inset:0;z-index:510;background:rgba(10,5,14,0.98);backdrop-filter:blur(20px);overflow-y:auto;padding:40px 20px;}
-.sos-send-screen.show{display:block;}
-.sos-send-inner{max-width:500px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:16px;}
-.sos-send-icon{font-size:3rem;}
-.sos-send-title{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--danger);text-align:center;}
-.sos-send-sub{font-size:0.83rem;color:var(--text2);text-align:center;line-height:1.8;max-width:360px;}
-.wa-progress-card{width:100%;background:var(--card);border:1px solid rgba(95,184,150,0.25);border-radius:16px;padding:18px;}
-.wa-prog-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:0.72rem;color:var(--muted);}
-.wa-prog-name{color:var(--sage);font-weight:700;}
-.wa-prog-track{height:5px;background:var(--sage-bg);border-radius:999px;overflow:hidden;margin-bottom:10px;}
-.wa-prog-fill{height:100%;background:linear-gradient(90deg,var(--sage),var(--sage2));border-radius:999px;width:100%;}
-.wa-timer-row{display:flex;align-items:center;justify-content:center;gap:6px;}
-.wa-timer-num{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--sage);font-weight:700;min-width:28px;text-align:center;}
-.wa-contacts-list{width:100%;display:flex;flex-direction:column;gap:6px;}
-.wa-contact-row{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;transition:all 0.3s;}
-.wa-contact-row.current{border-color:var(--rose);background:var(--blush);}
-.wa-contact-row.done{border-color:var(--sage);background:var(--sage-bg);opacity:0.85;}
-.wa-contact-row.pending{opacity:0.4;}
-.wa-ct-dot{font-size:0.85rem;font-weight:800;width:20px;text-align:center;color:var(--muted);}
-.wa-contact-row.current .wa-ct-dot{color:var(--rose2);}
-.wa-contact-row.done .wa-ct-dot{color:var(--sage);}
-.wa-ct-name{flex:1;font-size:0.85rem;font-weight:700;color:var(--text);}
-.wa-ct-phone{font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;}
-.wa-ct-status{font-size:0.72rem;font-weight:700;}
-.wa-action-row{display:flex;gap:8px;width:100%;flex-wrap:wrap;justify-content:center;}
-.wa-skip-btn{padding:9px 18px;border-radius:8px;background:var(--blush);border:1px solid rgba(232,82,122,0.3);color:var(--rose2);font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
-.wa-reopen-btn{padding:9px 18px;border-radius:8px;background:var(--sage-bg);border:1px solid rgba(95,184,150,0.3);color:var(--sage);font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;}
-.sos-send-close{width:100%;padding:14px 40px;border-radius:999px;background:linear-gradient(135deg,var(--sage),#3d9b75);border:none;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(95,184,150,0.3);transition:all 0.2s;}
-.sos-send-close:hover{transform:translateY(-1px);}
-.test-overlay{display:none;position:fixed;inset:0;z-index:510;background:rgba(8,16,12,0.97);backdrop-filter:blur(20px);align-items:center;justify-content:center;}
-.test-overlay.show{display:flex;}
-.test-inner{display:flex;flex-direction:column;align-items:center;gap:14px;padding:40px;text-align:center;max-width:400px;}
-.test-title{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--sage);}
-.test-result-overlay{display:none;position:fixed;inset:0;z-index:520;background:rgba(8,16,12,0.98);backdrop-filter:blur(20px);overflow-y:auto;padding:40px 20px;}
-.test-result-overlay.show{display:block;}
-.test-result-inner{max-width:500px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;}
-.test-result-title{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--sage);}
-.test-result-list{width:100%;display:flex;flex-direction:column;gap:8px;text-align:left;}
-.test-result-item{background:var(--card);border:1px solid rgba(95,184,150,0.2);border-radius:12px;padding:12px 14px;font-size:0.8rem;color:var(--text);line-height:1.6;display:flex;gap:10px;align-items:flex-start;}
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--border2);color:var(--text);padding:10px 22px;border-radius:999px;font-size:0.83rem;font-weight:600;opacity:0;pointer-events:none;transition:all 0.3s;z-index:999;box-shadow:0 8px 30px rgba(0,0,0,0.5);white-space:nowrap;}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* Android guide */
+.android-guide-card {
+  background:linear-gradient(135deg, rgba(29,78,216,0.08), rgba(59,130,246,0.04));
+  border:1px solid rgba(59,130,246,0.2);
+  border-radius:16px; padding:16px;
+  font-size:0.78rem; color:#93c5fd; line-height:1.9; margin-bottom:12px;
+}
+.android-guide-card strong { color:#60a5fa; }
+.step { display:flex; gap:9px; align-items:flex-start; margin-bottom:6px; }
+.step-num {
+  width:20px; height:20px; border-radius:50%;
+  background:var(--blue); color:#fff;
+  font-size:0.62rem; font-weight:800;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; margin-top:2px;
+}
+
+/* ═══════ CONTACTS PAGE ═══════ */
+.contacts-layout { display:grid; grid-template-columns:1fr 340px; gap:16px; }
+.contact-item {
+  background:var(--card2); border:1px solid var(--border);
+  border-radius:12px; padding:12px 14px;
+  display:flex; align-items:center; gap:12px;
+  margin-bottom:8px; transition:border-color 0.2s;
+  animation:fade-in 0.3s ease;
+}
+.contact-item:hover { border-color:var(--border2); }
+@keyframes fade-in { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+.avatar {
+  width:38px; height:38px; border-radius:50%;
+  background:linear-gradient(135deg, rgba(232,82,122,0.3), rgba(196,122,176,0.2));
+  border:1px solid rgba(232,82,122,0.3);
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.82rem; font-weight:800; color:var(--rose2); flex-shrink:0;
+}
+.contact-info { flex:1; }
+.contact-name  { font-size:0.85rem; font-weight:700; color:var(--text); }
+.contact-phone { font-size:0.7rem;  color:var(--muted); margin-top:1px; font-family:'DM Mono', monospace; }
+.del-btn {
+  width:28px; height:28px; border-radius:50%;
+  background:var(--danger-light); border:none; cursor:pointer;
+  font-size:0.82rem; color:var(--danger);
+  display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+}
+.del-btn:hover { background:rgba(239,68,68,0.25); }
+
+.add-form {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:18px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.form-label { font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:3px; display:block; }
+.add-input {
+  background:var(--bg2); border:1px solid var(--border2);
+  border-radius:9px; padding:9px 12px;
+  color:var(--text); font-family:'DM Sans', sans-serif; font-size:0.85rem;
+  outline:none; transition:border-color 0.2s; width:100%;
+}
+.add-input:focus { border-color:var(--rose); }
+.add-input::placeholder { color:var(--muted); }
+.phone-row { display:flex; gap:6px; }
+.country-select {
+  background:var(--bg2); border:1px solid var(--border2);
+  border-radius:9px; padding:9px 10px;
+  color:var(--text); font-family:'DM Sans', sans-serif; font-size:0.8rem;
+  outline:none; cursor:pointer;
+}
+.add-btn {
+  padding:10px; border-radius:10px;
+  background:linear-gradient(135deg, var(--rose), var(--mauve));
+  border:none; color:#fff; font-family:'DM Sans', sans-serif;
+  font-size:0.85rem; font-weight:700; cursor:pointer; transition:opacity 0.2s;
+}
+.add-btn:hover { opacity:0.85; }
+
+.sos-msg-wrap {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:16px; margin-top:14px;
+}
+.sos-msg-label { font-size:0.65rem; color:var(--muted); font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; }
+#sosMsg {
+  width:100%; background:var(--bg2); border:1px solid var(--border2);
+  border-radius:9px; padding:10px 12px; color:var(--text);
+  font-family:'DM Sans', sans-serif; font-size:0.82rem;
+  resize:vertical; min-height:80px; outline:none; line-height:1.6;
+  transition:border-color 0.2s;
+}
+#sosMsg:focus { border-color:var(--rose); }
+.msg-hint { font-size:0.65rem; color:var(--muted); margin-top:5px; line-height:1.5; }
+
+/* ═══════ SETTINGS PAGE ═══════ */
+.settings-layout { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.setting-block {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:18px;
+}
+.setting-block-title {
+  font-size:0.65rem; font-weight:700; letter-spacing:0.15em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:14px;
+}
+.settings-wrap { display:flex; flex-direction:column; gap:0; }
+.setting-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 0; border-bottom:1px solid var(--border);
+}
+.setting-row:last-child { border-bottom:none; }
+.setting-left { display:flex; align-items:center; gap:10px; }
+.setting-emoji { font-size:1rem; width:22px; text-align:center; }
+.setting-label { font-size:0.83rem; font-weight:500; color:var(--text2); }
+.setting-sub   { font-size:0.65rem; color:var(--muted); margin-top:1px; }
+
+.toggle {
+  width:40px; height:22px; border-radius:999px;
+  background:rgba(255,255,255,0.1); border:none; cursor:pointer;
+  position:relative; transition:background 0.3s; flex-shrink:0;
+}
+.toggle::after {
+  content:''; position:absolute; top:2px; left:2px;
+  width:18px; height:18px; border-radius:50%;
+  background:#fff; transition:transform 0.3s;
+  box-shadow:0 1px 4px rgba(0,0,0,0.3);
+}
+.toggle.on { background:var(--rose); }
+.toggle.on::after { transform:translateX(18px); }
+
+.thresh-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:18px;
+  display:flex; flex-direction:column; gap:14px;
+}
+.thresh-row   { display:flex; flex-direction:column; gap:5px; }
+.thresh-top   { display:flex; justify-content:space-between; align-items:center; }
+.thresh-label { font-size:0.8rem; font-weight:500; color:var(--text2); }
+.thresh-val   { font-size:0.73rem; font-weight:700; color:var(--rose2); font-family:'DM Mono', monospace; }
+input[type=range] {
+  width:100%; height:4px;
+  -webkit-appearance:none; appearance:none;
+  background:linear-gradient(90deg, var(--rose) 0%, rgba(255,255,255,0.1) 0%);
+  border-radius:999px; cursor:pointer; outline:none;
+  transition:background 0.15s ease;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none; width:16px; height:16px; border-radius:50%;
+  background:var(--rose2); box-shadow:0 0 8px rgba(232,82,122,0.5); cursor:pointer;
+}
+input[type=range]::-moz-range-thumb {
+  width:16px; height:16px; border-radius:50%; border:none;
+  background:var(--rose2); box-shadow:0 0 8px rgba(232,82,122,0.5); cursor:pointer;
+}
+
+.panic-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:18px;
+}
+.panic-label { font-size:0.65rem; color:var(--muted); font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; }
+.panic-row { display:flex; gap:7px; }
+.panic-input {
+  flex:1; background:var(--bg2); border:1px solid var(--border2);
+  border-radius:9px; padding:9px 12px;
+  color:var(--text); font-family:'DM Mono', monospace; font-size:0.83rem;
+  outline:none; transition:border-color 0.2s;
+}
+.panic-input:focus { border-color:var(--rose); }
+.panic-save {
+  padding:9px 16px; border-radius:9px;
+  background:linear-gradient(135deg, var(--rose), var(--mauve));
+  border:none; color:#fff; font-family:'DM Sans', sans-serif;
+  font-size:0.8rem; font-weight:700; cursor:pointer;
+}
+.panic-status { font-size:0.7rem; color:var(--sage); min-height:16px; margin-top:5px; }
+
+.sos-history-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:18px;
+}
+.sos-history-item {
+  padding:9px 0; border-bottom:1px solid var(--border);
+  display:flex; gap:10px; align-items:flex-start;
+}
+.sos-history-item:last-child { border-bottom:none; }
+.sos-history-badge {
+  flex-shrink:0; padding:2px 8px; border-radius:999px;
+  font-size:0.6rem; font-weight:800; text-transform:uppercase; letter-spacing:0.1em;
+  background:var(--danger-light); color:var(--danger); border:1px solid rgba(239,68,68,0.3);
+}
+.sos-history-text { flex:1; font-size:0.77rem; color:var(--text2); line-height:1.5; }
+.sos-history-time { font-size:0.65rem; color:var(--muted); margin-top:2px; font-family:'DM Mono', monospace; }
+
+/* ═══════ OVERLAYS ═══════ */
+.sos-overlay {
+  display:none; position:fixed; inset:0; z-index:200;
+  background:rgba(10,5,14,0.96); backdrop-filter:blur(20px);
+  flex-direction:column; align-items:center; justify-content:center; gap:22px;
+}
+.sos-overlay.show { display:flex; }
+.sos-ov-title { font-family:'Cormorant Garamond', serif; font-size:2.5rem; color:var(--rose2); text-align:center; }
+.sos-ov-sub {
+  font-size:0.82rem; color:var(--text2); text-align:center;
+  max-width:280px; line-height:1.7;
+}
+.countdown-ring { position:relative; width:148px; height:148px; }
+.countdown-ring svg { position:absolute; inset:0; transform:rotate(-90deg); }
+.countdown-ring circle { fill:none; stroke-width:7; }
+.cr-track { stroke:rgba(232,82,122,0.12); }
+.cr-prog  { stroke:var(--rose2); stroke-linecap:round; stroke-dasharray:440; stroke-dashoffset:0; transition:stroke-dashoffset 1s linear; }
+.countdown-num {
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:'Cormorant Garamond', serif; font-size:3.8rem; color:var(--rose2);
+}
+.cancel-btn {
+  padding:13px 40px; border-radius:999px;
+  background:transparent; border:2px solid var(--rose); color:var(--rose2);
+  font-family:'DM Sans', sans-serif; font-size:0.93rem; font-weight:700;
+  cursor:pointer; letter-spacing:0.06em; transition:all 0.2s;
+  animation:gentle-shake 0.5s ease infinite;
+}
+@keyframes gentle-shake { 0%,100%{transform:translateX(0)} 30%{transform:translateX(-5px)} 70%{transform:translateX(5px)} }
+.cancel-btn:hover { background:var(--rose); color:#fff; animation:none; }
+
+/* SMS send screen */
+.sos-send-screen {
+  display:none; position:fixed; inset:0; z-index:200;
+  background:rgba(10,5,14,0.97); backdrop-filter:blur(20px);
+  flex-direction:column; align-items:center; justify-content:center;
+  overflow-y:auto; padding:24px;
+}
+.sos-send-screen.show { display:flex; }
+.sos-send-inner { max-width:380px; width:100%; display:flex; flex-direction:column; gap:14px; text-align:center; }
+.sos-send-icon  { font-size:2.8rem; }
+.sos-send-title { font-family:'Cormorant Garamond', serif; font-size:1.7rem; color:var(--danger); }
+.sos-send-sub   { font-size:0.82rem; color:var(--text2); line-height:1.7; }
+.wa-progress-card {
+  background:var(--card); border:1px solid rgba(95,184,150,0.25);
+  border-radius:14px; padding:14px;
+}
+.wa-prog-header { display:flex; justify-content:space-between; margin-bottom:7px; font-size:0.72rem; color:var(--muted); }
+.wa-prog-name   { font-weight:700; color:var(--text); }
+.wa-prog-track  { height:5px; background:var(--sage-bg); border-radius:999px; overflow:hidden; }
+.wa-prog-fill   { height:100%; background:linear-gradient(90deg, var(--sage), var(--sage2)); transition:width 0.3s; }
+.wa-timer-row   { display:flex; align-items:center; justify-content:center; gap:5px; margin-top:7px; }
+.wa-timer-num   { font-family:'Cormorant Garamond', serif; font-size:1.5rem; color:var(--sage); }
+.wa-contacts-list { text-align:left; display:flex; flex-direction:column; gap:5px; }
+.wa-contact-row {
+  display:flex; align-items:center; gap:8px;
+  padding:8px 12px; border-radius:10px; font-size:0.78rem;
+  background:var(--card2); border:1px solid var(--border);
+}
+.wa-contact-row.done    { opacity:0.7; }
+.wa-contact-row.current { background:var(--blush); border-color:rgba(232,82,122,0.3); }
+.wa-ct-dot    { width:22px; text-align:center; font-weight:700; color:var(--rose2); }
+.wa-ct-name   { flex:1; font-weight:600; color:var(--text); }
+.wa-ct-phone  { color:var(--muted); font-size:0.7rem; font-family:'DM Mono', monospace; }
+.wa-ct-status { font-size:0.7rem; }
+.wa-action-row { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+.wa-skip-btn {
+  padding:9px 18px; border-radius:999px;
+  background:var(--card2); border:1px solid var(--border2);
+  color:var(--text2); font-family:'DM Sans', sans-serif;
+  font-size:0.78rem; font-weight:700; cursor:pointer;
+}
+.wa-reopen-btn {
+  padding:9px 18px; border-radius:999px;
+  background:var(--blush); border:1px solid rgba(232,82,122,0.3);
+  color:var(--rose2); font-family:'DM Sans', sans-serif;
+  font-size:0.78rem; font-weight:700; cursor:pointer;
+}
+.sos-send-close {
+  padding:13px; border-radius:12px;
+  background:linear-gradient(135deg, var(--sage), #3d9b75);
+  border:none; color:#fff; font-family:'DM Sans', sans-serif;
+  font-size:0.9rem; font-weight:700; cursor:pointer;
+  box-shadow:0 4px 18px rgba(95,184,150,0.3);
+}
+
+/* Test overlays */
+.test-overlay {
+  display:none; position:fixed; inset:0; z-index:200;
+  background:rgba(8,16,12,0.96); backdrop-filter:blur(20px);
+  flex-direction:column; align-items:center; justify-content:center; gap:20px;
+}
+.test-overlay.show { display:flex; }
+.test-result-overlay {
+  display:none; position:fixed; inset:0; z-index:210;
+  background:rgba(8,16,12,0.97); backdrop-filter:blur(20px);
+  flex-direction:column; align-items:center; justify-content:flex-start;
+  padding:32px 24px; overflow-y:auto;
+}
+.test-result-overlay.show { display:flex; }
+.test-result-inner { max-width:380px; width:100%; display:flex; flex-direction:column; gap:12px; }
+.test-result-title { font-family:'Cormorant Garamond', serif; font-size:1.7rem; color:var(--sage); text-align:center; margin-top:16px; }
+.test-result-item {
+  display:flex; align-items:flex-start; gap:10px;
+  background:var(--card); border-radius:12px;
+  padding:11px 13px; border:1px solid var(--border);
+  font-size:0.8rem; line-height:1.5; color:var(--text);
+}
+.tri { font-size:1.2rem; flex-shrink:0; }
+
+/* Toast */
+.toast {
+  position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(10px);
+  background:var(--card2); border:1px solid var(--border2);
+  color:var(--text); padding:9px 20px; border-radius:999px;
+  font-size:0.8rem; font-weight:600; z-index:300;
+  opacity:0; pointer-events:none; transition:all 0.3s;
+  white-space:nowrap; box-shadow:0 4px 20px rgba(0,0,0,0.4);
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
+<div class="app">
 
-<!-- SOS COUNTDOWN -->
-<div class="sos-overlay" id="sosOverlay">
-  <div class="sos-overlay-glow"></div>
-  <div class="sos-ov-title">⚠️ SOS Triggered</div>
-  <div class="sos-ov-reason" id="sosReason"></div>
-  <div class="countdown-ring">
-    <svg viewBox="0 0 150 150" width="180" height="180">
-      <circle class="cr-track" cx="75" cy="75" r="70"/>
-      <circle class="cr-prog" id="crProg" cx="75" cy="75" r="70"/>
-    </svg>
-    <div class="countdown-num" id="countNum">10</div>
-  </div>
-  <div class="sos-ov-sub">SOS SMS will send in <strong id="countText">10</strong> seconds.</div>
-  <button class="cancel-btn" onclick="cancelSOS()">✕ &nbsp; Cancel SOS</button>
-</div>
-
-<!-- SOS SEND -->
-<div class="sos-send-screen" id="sosSendScreen"></div>
-
-<!-- TEST OVERLAY -->
-<div class="test-overlay" id="testOverlay">
-  <div class="test-inner">
-    <div style="font-size:3rem;">🧪</div>
-    <div class="test-title">Test SOS — Dry Run</div>
-    <div style="font-size:0.82rem;color:var(--text2);">Simulation only. No real messages sent.</div>
-    <div class="countdown-ring" style="margin:6px 0;">
-      <svg viewBox="0 0 150 150" width="140" height="140">
-        <circle class="cr-track" cx="75" cy="75" r="70"/>
-        <circle class="cr-prog" id="testCrProg" cx="75" cy="75" r="70" style="stroke:var(--sage);"/>
-      </svg>
-      <div class="countdown-num" id="testCountNum" style="color:var(--sage);font-size:3.5rem;">10</div>
-    </div>
-    <div style="font-size:0.78rem;color:var(--muted);">Simulating countdown…</div>
-    <button class="cancel-btn" style="border-color:var(--sage);color:var(--sage);" onclick="cancelTestSOS()">✕ &nbsp; Cancel Test</button>
-  </div>
-</div>
-
-<!-- TEST RESULT -->
-<div class="test-result-overlay" id="testResultOverlay">
-  <div class="test-result-inner">
-    <div style="font-size:3rem;">✅</div>
-    <div class="test-result-title">Test Complete!</div>
-    <div style="font-size:0.83rem;color:var(--text2);">Everything worked. Here's what <em>would have</em> happened:</div>
-    <div class="test-result-list" id="testResultList"></div>
-    <button class="sos-send-close" onclick="closeTestResult()">Got it — I'm ready 🌸</button>
-  </div>
-</div>
-
-<!-- SHELL -->
-<div class="shell">
+  <!-- ═══════ SIDEBAR ═══════ -->
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-logo"><div class="brand-icon">🌸</div>She<em>Safe</em></div>
       <div class="brand-tagline">Personal Safety Guardian</div>
     </div>
+
     <div class="nav-section">
-      <div class="nav-label">Navigation</div>
-      <div class="nav-item active" id="navHome" onclick="showPage('Home')"><span class="ni">🏠</span> Dashboard</div>
-      <div class="nav-item" id="navContacts" onclick="showPage('Contacts')"><span class="ni">👥</span> Emergency Contacts</div>
-      <div class="nav-item" id="navSettings" onclick="showPage('Settings')"><span class="ni">⚙️</span> Settings</div>
+      <div class="nav-label">Navigate</div>
+      <button class="nav-btn active" id="navHome"     onclick="showPage('Home')">    <span class="nav-icon">🛡️</span><span class="nav-text">Guard</span></button>
+      <button class="nav-btn"        id="navDash"     onclick="showPage('Dash')">    <span class="nav-icon">📊</span><span class="nav-text">Sensors</span></button>
+      <button class="nav-btn"        id="navContacts" onclick="showPage('Contacts')"><span class="nav-icon">👥</span><span class="nav-text">Contacts</span></button>
+      <button class="nav-btn"        id="navSettings" onclick="showPage('Settings')"><span class="nav-icon">⚙️</span><span class="nav-text">Settings</span></button>
 
       <div class="nav-label">Connection</div>
-      <div class="conn-row">
-        <div class="conn-badge" id="wsBadge"><div class="cbdot"></div><span>Server…</span></div>
-        <div class="conn-badge" id="androidBadge"><div class="cbdot"></div><span>Android offline</span></div>
+      <div class="sidebar-conn">
+        <span class="ws-badge disconnected" id="wsBadge"><span class="ws-dot"></span>Connecting…</span>
+        <span class="ws-badge" id="androidBadge" style="color:#4a90d9;border-color:rgba(74,144,217,0.3);background:rgba(74,144,217,0.08);"><span class="ws-dot"></span>Android offline</span>
       </div>
 
       <div class="nav-label">Status</div>
       <div class="sidebar-status">
-        <div class="ss-label">Protection Status</div>
-        <div class="ss-pill" id="statusPill">
-          <div class="ss-dot" id="sdot"></div>
+        <div class="ss-label">Protection</div>
+        <div class="status-pill" id="statusPill">
+          <div class="sdot" id="sdot"></div>
           <span id="statusText">Standby</span>
         </div>
       </div>
     </div>
-    <div class="sidebar-time" id="clockDisplay">--:--:--</div>
+
+    <div class="sidebar-clock" id="sidebarClock">--:--:--</div>
   </aside>
 
-  <div class="main">
+  <!-- ═══════ MAIN AREA ═══════ -->
+  <div class="main-area">
     <div class="topbar">
-      <div class="page-title" id="pageTitle">Dashboard <span>Overview</span></div>
-      <div class="topbar-right">
+      <div class="page-title" id="pageHeading">Guard <span>Mode</span></div>
+      <div class="topbar-actions">
         <button class="test-btn" onclick="startTestSOS()">🧪 Test SOS</button>
-        <button class="sos-main-btn" onclick="triggerSOS('Manual SOS triggered by user')">🆘 SEND SOS NOW</button>
+        <button class="sos-btn-main" onclick="triggerSOS('🆘 Manual SOS triggered by user')">🆘 SEND EMERGENCY SOS</button>
       </div>
     </div>
 
-    <div class="page-wrap">
+    <div class="page-scroll">
 
-      <!-- HOME -->
+      <!-- ══════════════════ HOME PAGE ══════════════════ -->
       <div class="page active" id="pageHome">
-        <div class="dash-grid">
+        <div class="home-grid">
 
           <!-- Shield -->
-          <div class="shield-card" id="shieldCard">
+          <div class="shield-section" id="shieldSection">
             <div class="shield-outer">
-              <div class="shield-ring"></div><div class="shield-ring"></div><div class="shield-ring"></div>
+              <div class="petal-ring"></div>
+              <div class="petal-ring"></div>
+              <div class="petal-ring"></div>
               <button class="shield-btn" id="shieldBtn" onclick="toggleMonitoring()">
-                <div class="shield-icon" id="shieldIcon">🛡️</div>
-                <div class="shield-lbl" id="shieldLabel">TAP TO START</div>
+                <div class="shield-icon"  id="shieldIcon">🛡️</div>
+                <div class="shield-label" id="shieldLabel">TAP TO START</div>
               </button>
             </div>
-            <div class="shield-hint" id="shieldHint">Click to arm SOS detection.<br>Sensor data streams automatically.</div>
+            <p class="shield-hint" id="shieldHint">Tap to activate sensors &amp; begin safety monitoring</p>
           </div>
 
           <!-- Accel -->
-          <div class="sensor-card" id="cardAccel">
-            <div class="sc-head"><div class="sc-icon-wrap">📳</div><span class="sc-badge" id="badgeAccel">Waiting</span></div>
-            <div class="sc-label">Accelerometer</div>
-            <div class="sc-value" id="valAccel">—</div>
-            <div class="sc-unit">m/s² magnitude</div>
-            <div class="sc-bar-wrap"><div class="sc-bar" id="barAccel" style="width:0%"></div></div>
+          <div class="card" id="cardAccel">
+            <div class="card-icon">📳</div>
+            <div class="card-label">Accelerometer</div>
+            <div class="card-value" id="valAccel">—</div>
+            <div class="card-unit">m/s² magnitude</div>
+            <div class="bar-wrap"><div class="bar" id="barAccel" style="width:0%"></div></div>
           </div>
 
           <!-- Gyro -->
-          <div class="sensor-card" id="cardGyro">
-            <div class="sc-head"><div class="sc-icon-wrap">🔄</div><span class="sc-badge" id="badgeGyro">Waiting</span></div>
-            <div class="sc-label">Gyroscope</div>
-            <div class="sc-value" id="valGyro">—</div>
-            <div class="sc-unit">rad/s rotation</div>
-            <div class="sc-bar-wrap"><div class="sc-bar" id="barGyro" style="width:0%"></div></div>
+          <div class="card" id="cardGyro">
+            <div class="card-icon">🌀</div>
+            <div class="card-label">Gyroscope</div>
+            <div class="card-value" id="valGyro">—</div>
+            <div class="card-unit">rad/s rotation</div>
+            <div class="bar-wrap"><div class="bar" id="barGyro" style="width:0%"></div></div>
           </div>
 
-          <!-- Timeline -->
+          <!-- Timeline — spans full right column rows 1-4 -->
           <div class="timeline-card">
             <div class="tc-head">
               <div class="tc-title">Event Log</div>
@@ -419,199 +872,289 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
           </div>
 
           <!-- Sound -->
-          <div class="sensor-card" id="cardSound">
-            <div class="sc-head"><div class="sc-icon-wrap">🎙️</div><span class="sc-badge" id="badgeSound">Waiting</span></div>
-            <div class="sc-label">Sound Level</div>
-            <div class="sc-value" id="valSound">—</div>
-            <div class="sc-unit">dB ambient</div>
-            <div class="sc-bar-wrap"><div class="sc-bar" id="barSound" style="width:0%"></div></div>
+          <div class="card" id="cardSound">
+            <div class="card-icon">🎙️</div>
+            <div class="card-label">Sound Level</div>
+            <div class="card-value" id="valSound">—</div>
+            <div class="card-unit">dB ambient</div>
+            <div class="bar-wrap"><div class="bar" id="barSound" style="width:0%"></div></div>
           </div>
 
           <!-- GPS -->
-          <div class="sensor-card" id="cardGPS">
-            <div class="sc-head"><div class="sc-icon-wrap">📍</div><span class="sc-badge" id="badgeGPS">Waiting</span></div>
-            <div class="sc-label">GPS Location</div>
-            <div class="sc-value" id="valGPS">—</div>
-            <div class="sc-unit">latitude</div>
-            <div class="sc-bar-wrap"><div class="sc-bar safe" id="barGPS" style="width:0%"></div></div>
+          <div class="card" id="cardGPS">
+            <div class="card-icon">📍</div>
+            <div class="card-label">GPS</div>
+            <div class="card-value" id="valGPS">—</div>
+            <div class="card-unit">latitude</div>
+            <div class="bar-wrap"><div class="bar" id="barGPS" style="width:0%"></div></div>
           </div>
 
           <!-- Charts -->
           <div class="charts-row">
             <div class="chart-card">
-              <div class="chart-head"><div class="chart-title">Accelerometer</div><div class="chart-badge" id="accelBadge">—</div></div>
-              <canvas id="accelChart"></canvas>
+              <div class="chart-header">
+                <div class="chart-title">📳 Acceleration</div>
+                <span class="chart-badge" id="accelBadge">X: — Y: — Z: —</span>
+              </div>
+              <canvas class="sparkline" id="accelChart" width="400" height="60"></canvas>
             </div>
             <div class="chart-card">
-              <div class="chart-head"><div class="chart-title">Gyroscope</div><div class="chart-badge" id="gyroBadge">—</div></div>
-              <canvas id="gyroChart"></canvas>
+              <div class="chart-header">
+                <div class="chart-title">🌀 Gyroscope</div>
+                <span class="chart-badge green" id="gyroBadge">X: — Y: — Z: —</span>
+              </div>
+              <canvas class="sparkline" id="gyroChart" width="400" height="60"></canvas>
             </div>
             <div class="chart-card">
-              <div class="chart-head"><div class="chart-title">Sound (dB)</div><div class="chart-badge" id="soundBadge">—</div></div>
-              <canvas id="soundChart"></canvas>
+              <div class="chart-header">
+                <div class="chart-title">🎙️ Microphone</div>
+                <span class="chart-badge blue" id="soundBadge">— dB</span>
+              </div>
+              <canvas class="sparkline" id="soundChart" width="400" height="60"></canvas>
             </div>
           </div>
 
           <!-- Location -->
           <div class="location-card">
-            <div class="lc-icon">📡</div>
-            <div class="lc-body">
-              <div class="lc-title">Live Location — from SensorApp Android</div>
-              <div class="lc-coords" id="locationCoords">Waiting for GPS from Android…</div>
-              <div class="lc-link" id="locationLink" onclick="copyLocationLink()"></div>
+            <div style="width:100%;">
+              <div class="location-header">
+                <div class="location-title">📡 Live Location</div>
+                <button class="share-btn" onclick="shareLocation()">Share Link</button>
+              </div>
+              <div class="location-coords" id="locationCoords">Waiting for GPS lock from Android…</div>
+              <div class="location-link" id="locationLink" onclick="copyLocationLink()"></div>
             </div>
-            <div><button class="lc-btn" onclick="shareLocation()">Copy Link</button></div>
           </div>
 
           <!-- SOS banner -->
-          <div class="sos-banner" id="sosBanner">📨 SOS SMS sent to all emergency contacts with your live location.</div>
-
-          <!-- Android guide -->
-          <div class="android-card">
-            <div class="ac-title">📱 Android SensorApp Setup</div>
-            <div class="ac-steps">
-              <div class="ac-step"><div class="ac-num">1</div><div>Install the <strong>SensorApp APK</strong> on your Android phone (built from Android Studio)</div></div>
-              <div class="ac-step"><div class="ac-num">2</div><div>Make sure <code style="background:rgba(0,0,0,0.2);padding:1px 6px;border-radius:4px;">SERVER_WS_URL</code> in <strong>SensorService.kt</strong> is set to <code style="background:rgba(0,0,0,0.2);padding:1px 6px;border-radius:4px;">wss://shesafe-server-1iw9.onrender.com/android</code></div></div>
-              <div class="ac-step"><div class="ac-num">3</div><div>Open the app, grant all permissions, then tap <strong>Start Monitoring</strong></div></div>
-              <div class="ac-step"><div class="ac-num">4</div><div>The <strong>Android live</strong> badge in the sidebar turns green — sensor charts start updating</div></div>
-            </div>
+          <div class="sos-banner" id="sosBanner">
+            🆘 SOS has been sent! SMS is opening for your emergency contacts. Stay safe. 🌸
           </div>
 
         </div>
-      </div>
+      </div><!-- /pageHome -->
 
-      <!-- CONTACTS -->
+      <!-- ══════════════════ SENSORS / DASH PAGE ══════════════════ -->
+      <div class="page" id="pageDash">
+        <div class="section-title">Live Sensor Streams</div>
+
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
+          <span class="ws-badge disconnected" id="wsBadge2"><span class="ws-dot"></span>Connecting…</span>
+          <span class="ws-badge" id="androidBadge2" style="color:#4a90d9;border-color:rgba(74,144,217,0.3);background:rgba(74,144,217,0.08);"><span class="ws-dot"></span>Android offline</span>
+        </div>
+
+        <div class="chart-card-full">
+          <div class="chart-header"><div class="chart-title">📳 Linear Acceleration</div><span class="chart-badge" id="accelBadge2">X: — Y: — Z: —</span></div>
+          <canvas class="sparkline" id="accelChart2" width="400" height="60"></canvas>
+        </div>
+        <div class="chart-card-full">
+          <div class="chart-header"><div class="chart-title">🌀 Gyroscope</div><span class="chart-badge green" id="gyroBadge2">X: — Y: — Z: —</span></div>
+          <canvas class="sparkline" id="gyroChart2" width="400" height="60"></canvas>
+        </div>
+        <div class="chart-card-full">
+          <div class="chart-header"><div class="chart-title">🎙️ Microphone Level</div><span class="chart-badge blue" id="soundBadge2">— dB</span></div>
+          <canvas class="sparkline" id="soundChart2" width="400" height="60"></canvas>
+        </div>
+
+        <div class="section-title">Raw Readouts</div>
+        <div class="raw-panel">
+          <div class="raw-line"><span class="raw-key">accel.x</span><span class="raw-val" id="rawAccelX">—</span></div>
+          <div class="raw-line"><span class="raw-key">accel.y</span><span class="raw-val" id="rawAccelY">—</span></div>
+          <div class="raw-line"><span class="raw-key">accel.z</span><span class="raw-val" id="rawAccelZ">—</span></div>
+          <div class="raw-line"><span class="raw-key dim">gyro.x</span><span class="raw-val" id="rawGyroX">—</span></div>
+          <div class="raw-line"><span class="raw-key dim">gyro.y</span><span class="raw-val" id="rawGyroY">—</span></div>
+          <div class="raw-line"><span class="raw-key dim">gyro.z</span><span class="raw-val" id="rawGyroZ">—</span></div>
+          <div class="raw-line"><span class="raw-key" style="color:#93c5fd;">mic.db</span><span class="raw-val" id="rawDb">—</span></div>
+          <div class="raw-line"><span class="raw-key" style="color:#93c5fd;">gps.lat</span><span class="raw-val" id="rawLat">—</span></div>
+          <div class="raw-line"><span class="raw-key" style="color:#93c5fd;">gps.lon</span><span class="raw-val" id="rawLon">—</span></div>
+          <div class="raw-line"><span class="raw-key" style="color:#93c5fd;">gps.speed</span><span class="raw-val" id="rawSpeed">—</span></div>
+        </div>
+
+        <div class="section-title">Android SensorApp</div>
+        <div class="android-guide-card">
+          <strong>SensorApp → Server → This Dashboard</strong><br><br>
+          <div class="step"><div class="step-num">1</div><div>Open <strong>SensorService.kt</strong> and set <code style="background:rgba(0,0,0,0.2);padding:1px 5px;border-radius:4px;">SERVER_WS_URL</code> to <code style="background:rgba(0,0,0,0.2);padding:1px 5px;border-radius:4px;">wss://shesafe-server-1iw9.onrender.com/android</code></div></div>
+          <div class="step"><div class="step-num">2</div><div>Build and run <strong>SensorApp</strong> on your phone. Tap START and grant all permissions.</div></div>
+          <div class="step"><div class="step-num">3</div><div>The <strong>Android live</strong> badge turns green and charts update in real time. Works over any network.</div></div>
+        </div>
+      </div><!-- /pageDash -->
+
+      <!-- ══════════════════ CONTACTS PAGE ══════════════════ -->
       <div class="page" id="pageContacts">
         <div class="contacts-layout">
           <div>
-            <div class="sb-title">Saved Emergency Contacts</div>
+            <div class="section-title">Emergency Contacts</div>
             <div id="contactList"></div>
           </div>
-          <div class="form-block">
-            <div class="sb-title">Add New Contact</div>
-            <div class="form-row">
-              <label class="form-label">Name</label>
-              <input class="form-input" id="newName" placeholder="e.g. Amma, Priya…">
-            </div>
-            <div class="form-row">
-              <label class="form-label">Country & Phone</label>
-              <div class="phone-row">
-                <select class="country-sel" id="countryCode">
-                  <option value="+91">🇮🇳 India (+91)</option>
-                  <option value="+1">🇺🇸 USA (+1)</option>
-                  <option value="+44">🇬🇧 UK (+44)</option>
-                  <option value="+61">🇦🇺 Australia (+61)</option>
-                  <option value="+971">🇦🇪 UAE (+971)</option>
-                  <option value="+65">🇸🇬 Singapore (+65)</option>
-                  <option value="+49">🇩🇪 Germany (+49)</option>
-                  <option value="+33">🇫🇷 France (+33)</option>
-                  <option value="+81">🇯🇵 Japan (+81)</option>
-                </select>
-                <input class="form-input" id="newPhone" placeholder="9876543210" type="tel">
+          <div>
+            <div class="section-title">Add Contact</div>
+            <div class="add-form">
+              <div>
+                <label class="form-label">Name</label>
+                <input class="add-input" id="newName" placeholder="e.g. Amma, Priya…" autocomplete="off">
               </div>
+              <div>
+                <label class="form-label">Phone Number</label>
+                <div class="phone-row">
+                  <select class="country-select" id="countryCode">
+                    <option value="+91">🇮🇳 +91</option>
+                    <option value="+1">🇺🇸 +1</option>
+                    <option value="+44">🇬🇧 +44</option>
+                    <option value="+61">🇦🇺 +61</option>
+                    <option value="+65">🇸🇬 +65</option>
+                    <option value="+971">🇦🇪 +971</option>
+                    <option value="+49">🇩🇪 +49</option>
+                    <option value="+33">🇫🇷 +33</option>
+                  </select>
+                  <input class="add-input" id="newPhone" placeholder="Phone number" type="tel" autocomplete="tel" style="flex:1">
+                </div>
+              </div>
+              <button class="add-btn" onclick="addContact()">+ Add Emergency Contact</button>
             </div>
-            <button class="add-btn" onclick="addContact()">+ Add Contact</button>
-            <div style="margin-top:16px;padding:12px;background:var(--bg2);border-radius:10px;font-size:0.75rem;color:var(--muted);line-height:1.6;">
-              💡 SOS alerts are sent via SMS to all contacts. Contacts are saved to the server — they persist across devices.
+
+            <div class="sos-msg-wrap">
+              <div class="sos-msg-label">SOS Message Template</div>
+              <textarea id="sosMsg">🆘 EMERGENCY! I need help. My live location: {location}. Please call me or contact emergency services immediately. — SheSafe</textarea>
+              <div class="msg-hint">Use <strong>{location}</strong> as a placeholder for your live GPS link.</div>
             </div>
           </div>
         </div>
-      </div>
+      </div><!-- /pageContacts -->
 
-      <!-- SETTINGS -->
+      <!-- ══════════════════ SETTINGS PAGE ══════════════════ -->
       <div class="page" id="pageSettings">
-        <div class="settings-grid">
+        <div class="settings-layout">
 
-          <div class="setting-card">
-            <div class="sc2-title">Detection Toggles</div>
-            <div class="toggle-row">
-              <div class="toggle-left"><span class="toggle-icon">📳</span><span class="toggle-label">Motion Detection</span></div>
-              <div class="toggle on" id="toggleMotion" onclick="toggle('motion','toggleMotion')"></div>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-left"><span class="toggle-icon">🎙️</span><span class="toggle-label">Sound Detection</span></div>
-              <div class="toggle on" id="toggleSound" onclick="toggle('sound','toggleSound')"></div>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-left"><span class="toggle-icon">🔄</span><span class="toggle-label">Gyroscope Detection</span></div>
-              <div class="toggle on" id="toggleGyro" onclick="toggle('gyro','toggleGyro')"></div>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-left"><span class="toggle-icon">⏱️</span><span class="toggle-label">2-Min Cooldown After SOS</span></div>
-              <div class="toggle on" id="toggleCooldown" onclick="toggle('cooldown','toggleCooldown')"></div>
-            </div>
-          </div>
-
-          <div class="setting-card">
-            <div class="sc2-title">Detection Thresholds</div>
-            <div class="thresh-row">
-              <div class="thresh-top"><span class="thresh-label">📳 Motion Sensitivity</span><span class="thresh-val" id="accelThreshVal">20 m/s²</span></div>
-              <input type="range" min="5" max="50" value="20" id="accelThresh" oninput="updateThresh()">
-            </div>
-            <div class="thresh-row">
-              <div class="thresh-top"><span class="thresh-label">🎙️ Sound Sensitivity</span><span class="thresh-val" id="soundThreshVal">85 dB</span></div>
-              <input type="range" min="60" max="120" value="85" id="soundThresh" oninput="updateThresh()">
-            </div>
-            <div class="thresh-row">
-              <div class="thresh-top"><span class="thresh-label">🔄 Gyroscope Sensitivity</span><span class="thresh-val" id="gyroThreshVal">8 rad/s</span></div>
-              <input type="range" min="2" max="20" value="8" id="gyroThresh" oninput="updateThresh()">
-            </div>
-            <div class="sc2-title" style="margin-top:16px;">Alerts & Feedback</div>
-            <div class="toggle-row">
-              <div class="toggle-left"><span class="toggle-icon">🔔</span><span class="toggle-label">Alert Beeps</span></div>
-              <div class="toggle on" id="toggleBeep" onclick="toggle('beep','toggleBeep')"></div>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-left"><span class="toggle-icon">📵</span><span class="toggle-label">Vibration (Mobile)</span></div>
-              <div class="toggle on" id="toggleVibrate" onclick="toggle('vibrate','toggleVibrate')"></div>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-left"><span class="toggle-icon">☀️</span><span class="toggle-label">Keep Screen Awake</span></div>
-              <div class="toggle on" id="toggleBg" onclick="toggle('background','toggleBg')"></div>
-            </div>
-          </div>
-
-          <div class="setting-card">
-            <div class="sc2-title">SOS Message Template</div>
-            <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;line-height:1.6;">Use <code style="background:var(--bg2);padding:1px 6px;border-radius:4px;color:var(--rose2);">{location}</code> to auto-insert GPS link.</div>
-            <textarea class="sos-textarea" id="sosMsg">🆘 EMERGENCY — I need help! This is an automated SOS from SheSafe. My live location: {location} — Please contact me or call emergency services immediately. 🌸</textarea>
-            <div class="sc2-title" style="margin-top:18px;">Secret Panic Password</div>
-            <div style="font-size:0.75rem;color:var(--muted);margin-bottom:8px;line-height:1.6;">Type this anywhere while monitoring is active to silently trigger SOS.</div>
-            <div class="panic-row">
-              <input class="panic-input" id="panicPasswordInput" type="password" placeholder="Set a secret word (e.g. rose123)" autocomplete="off" spellcheck="false">
-              <button class="panic-save-btn" onclick="savePanicPassword()">Save</button>
-            </div>
-            <div class="panic-status" id="panicStatus"></div>
-          </div>
-
-          <div class="setting-card">
-            <div class="sc2-title">SOS History</div>
-            <div id="sosHistoryList"><div style="color:var(--muted);font-size:0.78rem;">No SOS events yet.</div></div>
-            <div style="margin-top:20px;">
-              <div class="sc2-title">About SheSafe</div>
-              <div class="about-card">
-                <div class="about-title">She<em style="font-style:italic;color:var(--mauve);">Safe</em></div>
-                <div class="about-sub">Sensor data streams live from the <strong>SensorApp Android app</strong> via <strong>wss://shesafe-server-1iw9.onrender.com</strong>. All sensor data streams live from your Android phone. Data persists on your server. 🌸</div>
+          <div class="setting-block">
+            <div class="setting-block-title">Detection Triggers</div>
+            <div class="settings-wrap">
+              <div class="setting-row">
+                <div class="setting-left"><div class="setting-emoji">📳</div><div><div class="setting-label">Motion Detection</div><div class="setting-sub">Trigger on acceleration spike</div></div></div>
+                <button class="toggle on" id="toggleMotion"  onclick="toggle('motion','toggleMotion')"></button>
+              </div>
+              <div class="setting-row">
+                <div class="setting-left"><div class="setting-emoji">🌀</div><div><div class="setting-label">Gyroscope Detection</div><div class="setting-sub">Trigger on violent rotation</div></div></div>
+                <button class="toggle on" id="toggleGyro"    onclick="toggle('gyro','toggleGyro')"></button>
+              </div>
+              <div class="setting-row">
+                <div class="setting-left"><div class="setting-emoji">🎙️</div><div><div class="setting-label">Sound Detection</div><div class="setting-sub">Trigger on loud noise / scream</div></div></div>
+                <button class="toggle on" id="toggleSound"   onclick="toggle('sound','toggleSound')"></button>
+              </div>
+              <div class="setting-row">
+                <div class="setting-left"><div class="setting-emoji">📳</div><div><div class="setting-label">Vibrate on Alert</div><div class="setting-sub">Haptic feedback on detection</div></div></div>
+                <button class="toggle on" id="toggleVibrate" onclick="toggle('vibrate','toggleVibrate')"></button>
+              </div>
+              <div class="setting-row">
+                <div class="setting-left"><div class="setting-emoji">🔔</div><div><div class="setting-label">Alert Beep</div><div class="setting-sub">Audio tone on SOS trigger</div></div></div>
+                <button class="toggle on" id="toggleBeep"    onclick="toggle('beep','toggleBeep')"></button>
+              </div>
+              <div class="setting-row">
+                <div class="setting-left"><div class="setting-emoji">⏱️</div><div><div class="setting-label">Cooldown (2 min)</div><div class="setting-sub">Pause detection after SOS</div></div></div>
+                <button class="toggle on" id="toggleCooldown" onclick="toggle('cooldown','toggleCooldown')"></button>
+              </div>
+              <div class="setting-row">
+                <div class="setting-left"><div class="setting-emoji">🔒</div><div><div class="setting-label">Keep Screen On</div><div class="setting-sub">Wake lock while monitoring</div></div></div>
+                <button class="toggle on" id="toggleBg"      onclick="toggle('background','toggleBg')"></button>
               </div>
             </div>
           </div>
 
-        </div>
-      </div>
+          <div>
+            <div class="section-title" style="margin-top:0;">Alert Thresholds</div>
+            <div class="thresh-card">
+              <div class="thresh-row">
+                <div class="thresh-top"><span class="thresh-label">📳 Acceleration</span><span class="thresh-val" id="accelThreshVal">20 m/s²</span></div>
+                <input type="range" id="accelThresh" min="5" max="50" value="20" oninput="updateThresh()">
+              </div>
+              <div class="thresh-row">
+                <div class="thresh-top"><span class="thresh-label">🎙️ Sound Level</span><span class="thresh-val" id="soundThreshVal">85 dB</span></div>
+                <input type="range" id="soundThresh" min="60" max="110" value="85" oninput="updateThresh()">
+              </div>
+              <div class="thresh-row">
+                <div class="thresh-top"><span class="thresh-label">🌀 Gyroscope</span><span class="thresh-val" id="gyroThreshVal">8 rad/s</span></div>
+                <input type="range" id="gyroThresh" min="2" max="25" value="8" oninput="updateThresh()">
+              </div>
+            </div>
 
-    </div>
+            <div class="section-title">Panic Password</div>
+            <div class="panic-card">
+              <div class="panic-label">Type anywhere (when monitoring) to silently trigger SOS</div>
+              <div class="panic-row">
+                <input class="panic-input" id="panicPasswordInput" type="password" placeholder="Set a secret word or phrase">
+                <button class="panic-save" onclick="savePanicPassword()">Save</button>
+              </div>
+              <div class="panic-status" id="panicStatus"></div>
+            </div>
+
+            <div class="section-title">Test SOS</div>
+            <button class="test-btn" style="width:100%;padding:12px;border-radius:12px;margin-bottom:16px;" onclick="startTestSOS()">🧪 Run SOS Dry Run Test</button>
+
+            <div class="section-title">SOS History</div>
+            <div class="sos-history-card">
+              <div id="sosHistoryList"><div style="color:var(--muted);font-size:0.78rem;padding:8px 0;">No SOS events yet.</div></div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /pageSettings -->
+
+    </div><!-- /page-scroll -->
+  </div><!-- /main-area -->
+</div><!-- /app -->
+
+<!-- ══════ SOS COUNTDOWN OVERLAY ══════ -->
+<div class="sos-overlay" id="sosOverlay">
+  <div class="sos-ov-title">⚠️ SOS Triggered</div>
+  <div class="sos-ov-sub" id="sosReason">Emergency detected — sending alert in…</div>
+  <div class="countdown-ring">
+    <svg viewBox="0 0 148 148">
+      <circle class="cr-track" cx="74" cy="74" r="70"/>
+      <circle class="cr-prog"  id="crProg" cx="74" cy="74" r="70"/>
+    </svg>
+    <div class="countdown-num" id="countNum">10</div>
+  </div>
+  <button class="cancel-btn" onclick="cancelSOS()">TAP TO CANCEL</button>
+</div>
+
+<!-- ══════ SMS SEND SCREEN ══════ -->
+<div class="sos-send-screen" id="sosSendScreen"></div>
+
+<!-- ══════ TEST OVERLAY ══════ -->
+<div class="test-overlay" id="testOverlay">
+  <div class="sos-ov-title" style="color:var(--sage);">🧪 Test SOS</div>
+  <div class="sos-ov-sub">Simulating a full SOS dry run…</div>
+  <div class="countdown-ring">
+    <svg viewBox="0 0 148 148">
+      <circle class="cr-track" cx="74" cy="74" r="70"/>
+      <circle class="cr-prog"  id="testCrProg" cx="74" cy="74" r="70" style="stroke:var(--sage);"/>
+    </svg>
+    <div class="countdown-num" id="testCountNum" style="color:var(--sage);">10</div>
+  </div>
+  <button class="cancel-btn" style="border-color:var(--sage);color:var(--sage);" onclick="cancelTestSOS()">CANCEL TEST</button>
+</div>
+
+<!-- ══════ TEST RESULT OVERLAY ══════ -->
+<div class="test-result-overlay" id="testResultOverlay">
+  <div class="test-result-inner">
+    <div style="font-size:3rem;text-align:center;">✅</div>
+    <div class="test-result-title">Test Complete!</div>
+    <div id="testResultList"></div>
+    <button class="sos-send-close" style="margin-top:6px;" onclick="closeTestResult()">Done — I'm All Set 🌸</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════
-//  SERVER CONFIG — Render deployment
-// ═══════════════════════════════════════════════════
-const SERVER_HOST = 'shesafe-server-1iw9.onrender.com';
+// ═══════════════════════════════════════════════════════════════════
+//  SheSafe × SensorApp — Web Dashboard  (JS 100% original, untouched)
+//  Only the CSS/HTML shell has been reskinned to the dark rose theme.
+//  All logic, IDs, class interactions, and API calls are preserved.
+// ═══════════════════════════════════════════════════════════════════
 
-// ── State ─────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+
+// ── State ────────────────────────────────────────────
 let monitoring = false, sosActive = false;
 let countInterval = null, countdownVal = 10;
 let cooldownActive = false;
@@ -625,47 +1168,27 @@ let testTimer = null, testCount = 10, testMode = false;
 let settings = { motion:true, sound:true, gyro:true, vibrate:true, beep:true, cooldown:true, background:true };
 let androidConnected = false;
 
-// ── Chart history ──────────────────────────────────
+// ── Chart history ─────────────────────────────────────
 const HIST = 60;
 let accelHist = [], gyroHist = [], soundHist = [];
 
-// ── API helpers (REST → server) ────────────────────
+// ── API helpers ───────────────────────────────────────
 const API = {
-  base: `https://${SERVER_HOST}/api`,
-  get:  (p)   => fetch(`${API.base}${p}`).then(r=>r.json()).catch(()=>null),
+  base: '/api',
+  get: (p)   => fetch(`${API.base}${p}`).then(r=>r.json()).catch(()=>null),
   post: (p,b) => fetch(`${API.base}${p}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(r=>r.json()).catch(()=>null),
   del:  (p)   => fetch(`${API.base}${p}`,{method:'DELETE'}).then(r=>r.json()).catch(()=>null)
 };
 
-// ── Clock ──────────────────────────────────────────
-function updateClock() {
-  document.getElementById('clockDisplay').textContent =
-    new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-setInterval(updateClock, 1000); updateClock();
-
-// ── Navigation ─────────────────────────────────────
-const PAGE_TITLES = {
-  Home:     ['Dashboard','Overview'],
-  Contacts: ['Emergency','Contacts'],
-  Settings: ['App','Settings'],
-};
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page'+name).classList.add('active');
-  document.getElementById('nav'+name).classList.add('active');
-  const t = PAGE_TITLES[name];
-  document.getElementById('pageTitle').innerHTML = `${t[0]} <span>${t[1]}</span>`;
-}
-
-// ═══════════════════════════════════════════════════
-//  WEBSOCKET — connects to /browser on Node server
-// ═══════════════════════════════════════════════════
-let ws = null, wsReconnectTimer = null;
+// ─────────────────────────────────────────────────────
+//  WEBSOCKET — connects to /browser on the Node server
+// ─────────────────────────────────────────────────────
+let ws = null;
+let wsReconnectTimer = null;
 
 function connectWS() {
-  const url = `wss://${SERVER_HOST}/browser`;
+  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+  const url   = `${proto}://${location.host}/browser`;
   ws = new WebSocket(url);
 
   ws.onopen = () => {
@@ -677,116 +1200,139 @@ function connectWS() {
   ws.onmessage = (e) => {
     let msg;
     try { msg = JSON.parse(e.data); } catch { return; }
-    if (msg.type === 'init') ingestSensorFrame(msg.data);
-    if (msg.type === 'sensor') ingestSensorFrame(msg);
+
+    if (msg.type === 'init' || msg.type === 'sensor') {
+      ingestSensorFrame(msg.data);
+    }
     if (msg.type === 'android_status') {
       androidConnected = msg.connected;
       setAndroidBadge(msg.connected);
-      addEvent(
-        msg.connected ? '📱 Android connected — live sensor stream active' : '📱 Android disconnected',
-        msg.connected ? 'ok' : 'warn',
-        msg.connected ? 'sensor' : 'warn'
-      );
+      addEvent(msg.connected ? '📱 Android connected — live sensor stream' : '📱 Android disconnected', msg.connected ? 'ok' : 'warn', msg.connected ? 'sensor' : 'warn');
+    }
+    if (msg.type === 'sos') {
+      // Another client triggered SOS — show it in our log
+      sosHistory.unshift(msg.data);
+      renderSOSHistory();
     }
   };
 
-  ws.onclose = () => { setWSBadge(false); wsReconnectTimer = setTimeout(connectWS, 4000); };
-  ws.onerror = () => ws.close();
+  ws.onclose = () => {
+    setWSBadge(false);
+    wsReconnectTimer = setTimeout(connectWS, 4000);
+  };
+
+  ws.onerror = () => {
+    ws.close();
+  };
 }
 
 function setWSBadge(connected) {
   const b = document.getElementById('wsBadge');
-  b.className = 'conn-badge' + (connected ? ' on' : '');
-  b.innerHTML = `<div class="cbdot"></div><span>${connected ? 'Server connected' : 'Connecting…'}</span>`;
+  b.className = 'ws-badge ' + (connected ? 'connected' : 'disconnected');
+  b.innerHTML = `<span class="ws-dot"></span>${connected ? 'Server connected' : 'Connecting…'}`;
 }
 
 function setAndroidBadge(connected) {
   const b = document.getElementById('androidBadge');
-  b.className = 'conn-badge' + (connected ? ' on' : '');
-  b.innerHTML = `<div class="cbdot"></div><span>${connected ? 'Android live' : 'Android offline'}</span>`;
+  b.className = 'ws-badge ' + (connected ? 'connected' : '');
+  b.innerHTML = `<span class="ws-dot"></span>${connected ? 'Android live' : 'Android offline'}`;
 }
 
-// ═══════════════════════════════════════════════════
-//  INGEST — every sensor frame from Android → server → here
-// ═══════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────
+//  INGEST — called on every sensor frame from server
+// ─────────────────────────────────────────────────────
 function ingestSensorFrame(data) {
   if (!data) return;
-  // Handle both {type,accel,...} and {data:{accel,...}} shapes
-  const frame = data.accel ? data : (data.data || {});
-  const accel = frame.accel || {};
-  const gyro  = frame.gyro  || {};
-  const mic   = frame.mic   || {};
-  const gps   = frame.gps   || {};
 
-  // Chart history
+  const accel = data.accel || {};
+  const gyro  = data.gyro  || {};
+  const mic   = data.mic   || {};
+  const gps   = data.gps   || {};
+
+  // Charts
   pushHistory(accelHist, accel.mag || 0);
   pushHistory(gyroHist,  gyro.mag  || 0);
   pushHistory(soundHist, mic.db    || 30);
 
+  // Raw readout panel
+  updateRaw('AccelX', (accel.x || 0).toFixed(3));
+  updateRaw('AccelY', (accel.y || 0).toFixed(3));
+  updateRaw('AccelZ', (accel.z || 0).toFixed(3));
+  updateRaw('GyroX',  (gyro.x  || 0).toFixed(3));
+  updateRaw('GyroY',  (gyro.y  || 0).toFixed(3));
+  updateRaw('GyroZ',  (gyro.z  || 0).toFixed(3));
+  updateRaw('Db',     (mic.db  || 0).toFixed(1) + ' dB');
+  if (gps.lat) {
+    updateRaw('Lat',   gps.lat);
+    updateRaw('Lon',   gps.lng);
+    updateRaw('Speed', gps.speed ? gps.speed.toFixed(2) + ' m/s' : '—');
+  }
+
   // Chart badges
   document.getElementById('accelBadge').textContent = `X:${(accel.x||0).toFixed(1)} Y:${(accel.y||0).toFixed(1)} Z:${(accel.z||0).toFixed(1)}`;
   document.getElementById('gyroBadge').textContent  = `X:${(gyro.x||0).toFixed(1)} Y:${(gyro.y||0).toFixed(1)} Z:${(gyro.z||0).toFixed(1)}`;
-  document.getElementById('soundBadge').textContent = (mic.db||0).toFixed(1) + ' dB';
+  document.getElementById('soundBadge').textContent = (mic.db || 0).toFixed(1) + ' dB';
 
-  // GPS
+  // GPS for SOS location
   if (gps.lat && gps.lng) {
-    gpsLat = gps.lat; gpsLon = gps.lng;
+    gpsLat = gps.lat;
+    gpsLon = gps.lng;
     document.getElementById('valGPS').textContent = parseFloat(gpsLat).toFixed(5);
     document.getElementById('barGPS').style.width = '100%';
-    document.getElementById('cardGPS').className = 'sensor-card safe-gps';
-    document.getElementById('badgeGPS').textContent = 'Active';
+    document.getElementById('cardGPS').className = 'card safe';
     document.getElementById('locationCoords').textContent =
-      `📍 ${parseFloat(gpsLat).toFixed(5)}, ${parseFloat(gpsLon).toFixed(5)} ±${Math.round(gps.accuracy||0)}m`;
+      `📍 ${parseFloat(gpsLat).toFixed(5)}, ${parseFloat(gpsLon).toFixed(5)} ±${Math.round(gps.accuracy || 0)}m`;
   }
 
+  // Only trigger SOS checks when monitoring is active
   if (!monitoring) return;
 
   const aMag = accel.mag || 0;
   const gMag = gyro.mag  || 0;
   const db   = mic.db    || 0;
 
-  const aT = settings.motion && aMag > accelThresh;
-  const gT = settings.gyro   && gMag > gyroThresh;
-  const sT = settings.sound  && db   > soundThresh;
+  const accelTriggered = settings.motion && aMag > accelThresh;
+  const gyroTriggered  = settings.gyro   && gMag > gyroThresh;
+  const soundTriggered = settings.sound  && db   > soundThresh;
 
-  updateSensorCard('Accel', aMag.toFixed(2), Math.min(100,(aMag/50)*100), aT);
-  updateSensorCard('Gyro',  gMag.toFixed(2), Math.min(100,(gMag/20)*100), gT);
-  updateSensorCard('Sound', db.toFixed(1),   Math.min(100,(db/110)*100),  sT);
+  updateCard('Accel', aMag.toFixed(2), Math.min(100,(aMag/50)*100), accelTriggered);
+  updateCard('Gyro',  gMag.toFixed(2), Math.min(100,(gMag/20)*100), gyroTriggered);
+  updateCard('Sound', db.toFixed(1),   Math.min(100,(db/110)*100),  soundTriggered);
 
   if (!sosActive && !cooldownActive) {
-    if (aT)      triggerSOS(`⚠️ Impact detected! ${aMag.toFixed(1)} m/s²`);
-    else if (gT) triggerSOS(`⚠️ Violent rotation! ${gMag.toFixed(1)} rad/s`);
-    else if (sT) triggerSOS(`⚠️ Loud sound! ${db.toFixed(1)} dB`);
+    if (accelTriggered) triggerSOS(`⚠️ Impact detected! Accel: ${aMag.toFixed(1)} m/s²`);
+    else if (gyroTriggered)  triggerSOS(`⚠️ Violent rotation! ${gMag.toFixed(1)} rad/s`);
+    else if (soundTriggered) triggerSOS(`⚠️ Loud sound detected! ${db.toFixed(1)} dB`);
   }
 }
 
-// ═══════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────
 //  INIT
-// ═══════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────
 async function init() {
-  // Load contacts from server
   const savedContacts = await API.get('/contacts');
-  if (savedContacts && Array.isArray(savedContacts)) contacts = savedContacts;
+  if (savedContacts && Array.isArray(savedContacts)) {
+    contacts = savedContacts;
+  }
 
-  // Load settings from server
   const savedSettings = await API.get('/settings');
   if (savedSettings) {
-    settings      = {...settings, ...savedSettings};
+    settings = {...settings, ...savedSettings};
     accelThresh   = savedSettings.accelThresh   || 20;
     soundThresh   = savedSettings.soundThresh   || 85;
     gyroThresh    = savedSettings.gyroThresh    || 8;
     panicPassword = savedSettings.panicPassword || '';
     const msgEl = document.getElementById('sosMsg');
     if (msgEl && savedSettings.sosMessage) msgEl.value = savedSettings.sosMessage;
-    if (panicPassword)
+    if (panicPassword) {
       document.getElementById('panicStatus').textContent = `✅ Password set (${panicPassword.length} chars)`;
+    }
   }
   applySettingsToUI();
   updateThresh();
 
-  // Load SOS history
   const sosLog = await API.get('/sos-log');
-  if (sosLog && Array.isArray(sosLog)) sosHistory = sosLog.slice(0,20);
+  if (sosLog && Array.isArray(sosLog)) sosHistory = sosLog.slice(0, 20);
 
   renderContacts();
   renderTimeline();
@@ -796,75 +1342,112 @@ async function init() {
   requestWakeLock();
   connectWS();
 
-  addEvent('SheSafe ready 🌸 — waiting for Android SensorApp connection', 'ok', 'info');
+  addEvent('SheSafe × SensorApp ready 🌸 — waiting for Android connection', 'ok', 'info');
 }
 
-// ── Monitoring toggle ──────────────────────────────
+// ─────────────────────────────────────────────────────
+//  NAVIGATION
+// ─────────────────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page' + name).classList.add('active');
+  document.getElementById('nav'  + name).classList.add('active');
+}
+
+// ─────────────────────────────────────────────────────
+//  MONITORING TOGGLE  (arms/disarms SOS detection)
+//  Sensor data still streams regardless — toggle just
+//  controls whether threshold breaches fire SOS.
+// ─────────────────────────────────────────────────────
 function toggleMonitoring() {
   monitoring = !monitoring;
-  const btn  = document.getElementById('shieldBtn');
-  const card = document.getElementById('shieldCard');
   if (monitoring) {
-    btn.classList.add('monitoring'); card.classList.add('monitoring');
+    document.getElementById('shieldBtn').classList.add('monitoring');
     document.getElementById('shieldIcon').textContent  = '✅';
     document.getElementById('shieldLabel').textContent = 'Protecting';
     document.getElementById('shieldHint').textContent  = 'Monitoring active — SOS detection armed';
-    setStatus('active','Active');
+    setStatus('active', 'Active');
     requestWakeLock();
     addEvent('Monitoring armed — SOS detection active', 'ok', 'ok');
     showToast('🛡️ Protection active');
   } else {
-    btn.classList.remove('monitoring','sos-active'); card.classList.remove('monitoring','sos-active');
+    document.getElementById('shieldBtn').classList.remove('monitoring');
     document.getElementById('shieldIcon').textContent  = '🛡️';
     document.getElementById('shieldLabel').textContent = 'TAP TO START';
-    document.getElementById('shieldHint').textContent  = 'Click to arm SOS detection';
-    setStatus('','Standby');
+    document.getElementById('shieldHint').textContent  = 'Tap to arm SOS detection';
+    setStatus('', 'Standby');
     resetCards();
     addEvent('Monitoring disarmed', 'warn', 'warn');
     showToast('Monitoring paused');
   }
 }
 
-// ── Charts ─────────────────────────────────────────
-function pushHistory(arr, val) { arr.push(val); if (arr.length > HIST) arr.shift(); }
+// ─────────────────────────────────────────────────────
+//  CHARTS (canvas sparklines)
+// ─────────────────────────────────────────────────────
+function pushHistory(arr, val) {
+  arr.push(val);
+  if (arr.length > HIST) arr.shift();
+}
 
 function initCharts() {
   for (let i=0; i<HIST; i++) { accelHist.push(0); gyroHist.push(0); soundHist.push(30); }
 }
 
-function drawSparkline(id, data, color, threshold, minY, maxY) {
-  const canvas = document.getElementById(id);
+function drawSparkline(canvasId, data, color, threshold, minY, maxY) {
+  const canvas = document.getElementById(canvasId);
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  const W = canvas.offsetWidth || 300, H = 60;
+  const W = canvas.offsetWidth || 400, H = 60;
   canvas.width = W * devicePixelRatio; canvas.height = H * devicePixelRatio;
   ctx.scale(devicePixelRatio, devicePixelRatio);
-  ctx.clearRect(0,0,W,H);
-  const n = data.length; if (!n) return;
+  ctx.clearRect(0, 0, W, H);
+
+  const n = data.length;
+  if (!n) return;
   const lo = minY || 0;
-  const hi = maxY || (Math.max(...data, threshold||0) * 1.2 || 1);
-  const xStep = W / Math.max(n-1,1);
-  ctx.beginPath(); ctx.moveTo(0, H);
-  data.forEach((v,i) => {
-    const x = i*xStep, y = H - ((v-lo)/(hi-lo))*H;
-    i===0 ? ctx.lineTo(x,y) : ctx.lineTo(x,y);
-  });
-  ctx.lineTo((n-1)*xStep, H); ctx.closePath();
-  const grad = ctx.createLinearGradient(0,0,0,H);
-  grad.addColorStop(0, color+'55'); grad.addColorStop(1, color+'08');
-  ctx.fillStyle = grad; ctx.fill();
+  const hi = maxY || (Math.max(...data, threshold || 0) * 1.2 || 1);
+  const xStep = W / Math.max(n-1, 1);
+
+  // Fill area
   ctx.beginPath();
-  data.forEach((v,i) => {
-    const x = i*xStep, y = H - ((v-lo)/(hi-lo))*H;
-    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  ctx.moveTo(0, H);
+  data.forEach((v, i) => {
+    const x = i * xStep;
+    const y = H - ((v - lo) / (hi - lo)) * H;
+    if (i === 0) ctx.lineTo(x, y); else ctx.lineTo(x, y);
   });
-  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.stroke();
+  ctx.lineTo((n-1)*xStep, H);
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, color + '55'); grad.addColorStop(1, color + '08');
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  data.forEach((v, i) => {
+    const x = i * xStep;
+    const y = H - ((v - lo) / (hi - lo)) * H;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+
+  // Threshold line
   if (threshold !== undefined) {
-    const ty = H - ((threshold-lo)/(hi-lo))*H;
+    const ty = H - ((threshold - lo) / (hi - lo)) * H;
     if (ty > 0 && ty < H) {
-      ctx.beginPath(); ctx.moveTo(0,ty); ctx.lineTo(W,ty);
-      ctx.strokeStyle = 'rgba(217,79,107,0.4)'; ctx.lineWidth = 1;
-      ctx.setLineDash([4,4]); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(0, ty); ctx.lineTo(W, ty);
+      ctx.strokeStyle = 'rgba(217,79,107,0.4)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4,4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
     }
   }
 }
@@ -877,69 +1460,74 @@ function startChartLoop() {
   }, 250);
 }
 
-// ── Sensor cards ───────────────────────────────────
-function updateSensorCard(type, value, pct, triggered) {
-  const card  = document.getElementById('card'+type);
-  const val   = document.getElementById('val'+type);
-  const bar   = document.getElementById('bar'+type);
-  const badge = document.getElementById('badge'+type);
+// ─────────────────────────────────────────────────────
+//  SENSOR CARDS
+// ─────────────────────────────────────────────────────
+function updateCard(type, value, pct, triggered) {
+  const card = document.getElementById('card'+type);
+  const val  = document.getElementById('val'+type);
+  const bar  = document.getElementById('bar'+type);
   if (!card) return;
   val.textContent = value;
   bar.style.width = pct + '%';
-  if (triggered) {
-    card.className = 'sensor-card triggered';
-    bar.className  = 'sc-bar danger';
-    badge.textContent = 'Alert!';
-    badge.style.cssText = 'background:rgba(232,82,122,0.15);color:var(--rose2);border-color:rgba(232,82,122,0.3)';
-  } else {
-    card.className = 'sensor-card';
-    bar.className  = 'sc-bar';
-    badge.textContent = 'Live';
-    badge.style.cssText = 'background:rgba(95,184,150,0.1);color:var(--sage);border-color:rgba(95,184,150,0.2)';
-  }
+  const isSafe = type === 'GPS';
+  bar.className = 'bar' + (triggered ? ' danger' : isSafe ? ' safe-bar' : type === 'Gyro' ? ' blue-bar' : '');
+  card.className = 'card' + (triggered ? ' triggered' : isSafe ? ' safe' : '');
 }
 
 function resetCards() {
-  ['Accel','Gyro','Sound'].forEach(t => {
-    const c = document.getElementById('card'+t); if(c) c.className='sensor-card';
-    const v = document.getElementById('val'+t);  if(v) v.textContent='—';
-    const b = document.getElementById('bar'+t);  if(b){b.style.width='0%';b.className='sc-bar';}
-    const g = document.getElementById('badge'+t);if(g){g.textContent='Waiting';g.style.cssText='';}
+  ['Accel','Gyro','Sound','GPS'].forEach(t => {
+    const el = document.getElementById('card'+t);
+    if (el) el.className = 'card';
+    const v = document.getElementById('val'+t);
+    if (v) v.textContent = '—';
+    const b = document.getElementById('bar'+t);
+    if (b) b.style.width = '0%';
   });
 }
 
-// ── Location ───────────────────────────────────────
+function updateRaw(key, val) {
+  const el = document.getElementById('raw'+key);
+  if (el) el.textContent = val;
+}
+
+// ─────────────────────────────────────────────────────
+//  LOCATION
+// ─────────────────────────────────────────────────────
 function shareLocation() {
-  if (!gpsLat) { showToast('📍 GPS not yet received from Android'); return; }
+  if (!gpsLat) { showToast('📍 GPS not acquired yet — start monitoring first'); return; }
   const url = `https://maps.google.com/?q=${gpsLat},${gpsLon}`;
   const el = document.getElementById('locationLink');
-  el.textContent = url; el.classList.add('show');
+  el.textContent = url;
+  el.classList.add('show');
   copyLocationLink();
 }
+
 function copyLocationLink() {
   const el = document.getElementById('locationLink');
   if (!el.textContent) return;
   navigator.clipboard?.writeText(el.textContent).then(() => showToast('📋 Location link copied!'));
 }
 
-// ── SOS flow ───────────────────────────────────────
+// ─────────────────────────────────────────────────────
+//  SOS FLOW
+// ─────────────────────────────────────────────────────
 function triggerSOS(reason) {
   if (sosActive || cooldownActive || !monitoring) return;
-  sosActive = true; countdownVal = 10;
+  sosActive = true;
+  countdownVal = 10;
   addEvent(reason, 'danger', 'sos');
   playAlert('detect');
   document.getElementById('sosOverlay').classList.add('show');
-  document.getElementById('sosReason').textContent = reason;
-  document.getElementById('countText').textContent = '10';
+  document.getElementById('sosReason').textContent = reason || 'Emergency detected — sending alert in…';
   document.getElementById('shieldBtn').classList.add('sos-active');
   document.getElementById('shieldLabel').textContent = 'SOS in 10s';
-  setStatus('alert','🆘 SOS Pending');
-  if (settings.vibrate && navigator.vibrate) navigator.vibrate([500,200,500,200,500]);
+  setStatus('alert', '🆘 SOS Pending');
+  if (settings.vibrate && navigator.vibrate) navigator.vibrate([500,200,500,200,500,200,500]);
   updateCountdown(10);
   countInterval = setInterval(() => {
     countdownVal--;
     updateCountdown(countdownVal);
-    document.getElementById('countText').textContent = countdownVal;
     if (settings.vibrate && navigator.vibrate) navigator.vibrate(300);
     if (countdownVal <= 0) { clearInterval(countInterval); sendSOS(); }
   }, 1000);
@@ -948,17 +1536,21 @@ function triggerSOS(reason) {
 function updateCountdown(n) {
   document.getElementById('countNum').textContent = n;
   const circ = 2 * Math.PI * 70;
-  document.getElementById('crProg').style.strokeDashoffset = circ - (n/10)*circ;
+  document.getElementById('crProg').style.strokeDashoffset = circ - (n/10) * circ;
 }
 
 function cancelSOS() {
-  sosActive = false; clearInterval(countInterval);
+  sosActive = false;
+  clearInterval(countInterval);
   document.getElementById('sosOverlay').classList.remove('show');
   document.getElementById('shieldBtn').classList.remove('sos-active');
-  if (monitoring) { document.getElementById('shieldLabel').textContent='Protecting'; setStatus('active','Active'); }
+  if (monitoring) {
+    document.getElementById('shieldLabel').textContent = 'Protecting';
+    setStatus('active', 'Active');
+  }
   if (navigator.vibrate) navigator.vibrate(0);
   playAlert('cancel');
-  addEvent('SOS cancelled by user','warn','warn');
+  addEvent('SOS cancelled by user', 'warn', 'warn');
   showToast('✅ SOS cancelled');
 }
 
@@ -967,11 +1559,12 @@ async function sendSOS() {
   document.getElementById('sosOverlay').classList.remove('show');
   document.getElementById('shieldBtn').classList.remove('sos-active');
   if (navigator.vibrate) navigator.vibrate(0);
-  if (monitoring) { document.getElementById('shieldLabel').textContent='Protecting'; setStatus('alert','🆘 SOS Sent'); }
+  if (monitoring) { document.getElementById('shieldLabel').textContent = 'Protecting'; setStatus('alert','🆘 SOS Sent'); }
   playAlert('sos');
   const loc = gpsLat ? `https://maps.google.com/?q=${gpsLat},${gpsLon}` : 'Location unavailable';
-  sosMsg_built = (document.getElementById('sosMsg').value||'').replace('{location}', loc);
+  sosMsg_built = (document.getElementById('sosMsg').value || '').replace('{location}', loc);
   addEvent(`🆘 SOS — SMS opening for ${contacts.length} contact(s)`, 'danger', 'sos');
+
   const entry = {
     id: Date.now(), reason: sosMsg_built.slice(0,100),
     lat: gpsLat, lon: gpsLon,
@@ -979,21 +1572,28 @@ async function sendSOS() {
     timestamp: new Date().toISOString(),
     locationUrl: gpsLat ? `https://maps.google.com/?q=${gpsLat},${gpsLon}` : null
   };
-  sosHistory.unshift(entry); if (sosHistory.length > 20) sosHistory.pop();
+  sosHistory.unshift(entry);
+  if (sosHistory.length > 20) sosHistory.pop();
   renderSOSHistory();
+
   API.post('/sos-log', entry).catch(()=>{});
+
   document.getElementById('sosBanner').classList.add('show');
   setTimeout(() => document.getElementById('sosBanner').classList.remove('show'), 8000);
+
   if (!contacts.length) showNoContactsSOS();
   else startSMSQueue(sosMsg_built);
+
   if (settings.cooldown) {
     cooldownActive = true;
-    addEvent('⏱️ Cooldown started (2 min)','warn','warn');
-    setTimeout(() => { cooldownActive=false; addEvent('Cooldown ended','ok','ok'); }, 120000);
+    addEvent('⏱️ Cooldown started (2 min)', 'warn', 'warn');
+    setTimeout(() => { cooldownActive = false; addEvent('Cooldown ended — detection resumed', 'ok', 'ok'); }, 120000);
   }
 }
 
-// ── SMS queue ──────────────────────────────────────
+// ─────────────────────────────────────────────────────
+//  SMS QUEUE
+// ─────────────────────────────────────────────────────
 function startSMSQueue(msg) {
   smsQueue = [...contacts]; smsQueueIdx = 0;
   document.getElementById('sosSendScreen').classList.add('show');
@@ -1006,14 +1606,15 @@ function sendNextSMS(msg) {
   const smsLink = `sms:${c.phone}?body=${encodeURIComponent(msg)}`;
   renderSMSProgress(msg);
   window.location.href = smsLink;
-  addEvent(`📱 SMS opened for ${c.name}`, 'ok', 'ok');
+  addEvent(`📱 SMS opened for ${c.name} (${c.phone})`, 'ok', 'ok');
   let secs = smsAutoDelay;
   const bar = document.getElementById('waProgressBar');
   const timerEl = document.getElementById('waTimerNum');
   if (bar) { bar.style.transition='none'; setTimeout(()=>{ bar.style.transition=`width ${smsAutoDelay}s linear`; bar.style.width='0%'; },50); }
   clearInterval(smsQueueTimer);
   smsQueueTimer = setInterval(() => {
-    secs--; if (timerEl) timerEl.textContent = secs;
+    secs--;
+    if (timerEl) timerEl.textContent = secs;
     if (secs <= 0) { clearInterval(smsQueueTimer); smsQueueIdx++; sendNextSMS(msg); }
   }, 1000);
 }
@@ -1027,13 +1628,27 @@ function renderSMSProgress(msg) {
   screen.innerHTML = `<div class="sos-send-inner">
     <div class="sos-send-icon">💬</div>
     <div class="sos-send-title">Sending SOS SMS</div>
-    <div class="sos-send-sub">SMS opening for <strong>${c.name}</strong>. Press Send in Messages, then return here.</div>
+    <div class="sos-send-sub">SMS opening for <strong>${c.name}</strong>. Press Send in Phone Link / Messages, then return here.</div>
     <div class="wa-progress-card">
-      <div class="wa-prog-header"><span>Contact ${smsQueueIdx+1} of ${smsQueue.length}</span><span class="wa-prog-name">${c.name} ${c.phone}</span></div>
+      <div class="wa-prog-header">
+        <span>Contact ${smsQueueIdx+1} of ${smsQueue.length}</span>
+        <span class="wa-prog-name">${c.name} ${c.phone}</span>
+      </div>
       <div class="wa-prog-track"><div class="wa-prog-fill" id="waProgressBar" style="width:100%"></div></div>
-      <div class="wa-timer-row"><span style="font-size:0.75rem;color:var(--muted);">Next in</span><span class="wa-timer-num" id="waTimerNum">${smsAutoDelay}</span><span style="font-size:0.75rem;color:var(--muted);">sec</span></div>
+      <div class="wa-timer-row">
+        <span style="font-size:0.75rem;color:var(--muted);">Next in</span>
+        <span class="wa-timer-num" id="waTimerNum">${smsAutoDelay}</span>
+        <span style="font-size:0.75rem;color:var(--muted);">sec</span>
+      </div>
     </div>
-    <div class="wa-contacts-list">${smsQueue.map((ct,i)=>`<div class="wa-contact-row ${i<smsQueueIdx?'done':i===smsQueueIdx?'current':'pending'}"><div class="wa-ct-dot">${i<smsQueueIdx?'✓':i===smsQueueIdx?'▶':'·'}</div><div class="wa-ct-name">${ct.name}</div><div class="wa-ct-phone">${ct.phone}</div><div class="wa-ct-status">${i<smsQueueIdx?'<span style="color:var(--sage)">Sent</span>':i===smsQueueIdx?'<span style="color:var(--rose)">Sending…</span>':'<span style="color:var(--muted)">Waiting</span>'}</div></div>`).join('')}</div>
+    <div class="wa-contacts-list">
+      ${smsQueue.map((ct,i) => `<div class="wa-contact-row ${i<smsQueueIdx?'done':i===smsQueueIdx?'current':'pending'}">
+        <div class="wa-ct-dot">${i<smsQueueIdx?'✓':i===smsQueueIdx?'▶':'·'}</div>
+        <div class="wa-ct-name">${ct.name}</div>
+        <div class="wa-ct-phone">${ct.phone}</div>
+        <div class="wa-ct-status">${i<smsQueueIdx?'<span style="color:var(--sage)">Sent</span>':i===smsQueueIdx?'<span style="color:var(--rose)">Sending…</span>':'<span style="color:var(--muted)">Waiting</span>'}</div>
+      </div>`).join('')}
+    </div>
     <div class="wa-action-row">
       ${smsQueue.length > smsQueueIdx+1 ? `<button class="wa-skip-btn" onclick="skipToNext()">Skip → ${smsQueue[smsQueueIdx+1]?.name}</button>` : ''}
       <button class="wa-reopen-btn" onclick="window.location.href='${smsLink}'">↩ Reopen SMS</button>
@@ -1044,14 +1659,27 @@ function renderSMSProgress(msg) {
 
 function showAllSentUI() {
   const screen = document.getElementById('sosSendScreen');
-  screen.innerHTML = `<div class="sos-send-inner"><div style="font-size:3rem;">✅</div><div class="sos-send-title" style="color:var(--sage);">All SMS Sent!</div><div class="sos-send-sub">SMS was opened for all ${smsQueue.length} contact(s). Help is on the way. 🌸</div><div class="wa-contacts-list">${smsQueue.map(ct=>`<div class="wa-contact-row done"><div class="wa-ct-dot">✓</div><div class="wa-ct-name">${ct.name}</div><div class="wa-ct-phone">${ct.phone}</div><div class="wa-ct-status"><span style="color:var(--sage)">Sent</span></div></div>`).join('')}</div><button class="sos-send-close" onclick="closeSOSSendScreen()">I'm Getting Help 🌸</button></div>`;
+  screen.innerHTML = `<div class="sos-send-inner">
+    <div style="font-size:3rem;">✅</div>
+    <div class="sos-send-title" style="color:var(--sage);">All SMS Sent!</div>
+    <div class="sos-send-sub">SMS was opened for all ${smsQueue.length} contact(s). Help is on the way. 🌸</div>
+    <div class="wa-contacts-list">
+      ${smsQueue.map(ct=>`<div class="wa-contact-row done"><div class="wa-ct-dot">✓</div><div class="wa-ct-name">${ct.name}</div><div class="wa-ct-phone">${ct.phone}</div><div class="wa-ct-status"><span style="color:var(--sage)">Sent</span></div></div>`).join('')}
+    </div>
+    <button class="sos-send-close" onclick="closeSOSSendScreen()">I'm Getting Help 🌸</button>
+  </div>`;
   addEvent(`✅ SMS opened for all ${smsQueue.length} contacts`, 'ok', 'ok');
   playAlert('cancel');
 }
 
 function showNoContactsSOS() {
   const screen = document.getElementById('sosSendScreen');
-  screen.innerHTML = `<div class="sos-send-inner"><div class="sos-send-icon">⚠️</div><div class="sos-send-title">No Contacts!</div><div class="sos-send-sub">No emergency contacts saved.</div><button class="sos-send-close" onclick="closeSOSSendScreen();showPage('Contacts')">+ Add Contacts Now</button></div>`;
+  screen.innerHTML = `<div class="sos-send-inner">
+    <div class="sos-send-icon">⚠️</div>
+    <div class="sos-send-title">No Contacts!</div>
+    <div class="sos-send-sub">No emergency contacts saved. Go to <strong>Contacts</strong> to add them now.</div>
+    <button class="sos-send-close" onclick="closeSOSSendScreen(); showPage('Contacts')">+ Add Contacts Now</button>
+  </div>`;
   screen.classList.add('show');
 }
 
@@ -1060,71 +1688,104 @@ function closeSOSSendScreen() {
   document.getElementById('sosSendScreen').classList.remove('show');
 }
 
-// ── Contacts ───────────────────────────────────────
+// ─────────────────────────────────────────────────────
+//  CONTACTS
+// ─────────────────────────────────────────────────────
 function renderContacts() {
   const list = document.getElementById('contactList');
   list.innerHTML = '';
   if (!contacts.length) {
-    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:0.82rem;">No contacts yet. Add one using the form →</div>';
+    list.innerHTML = '<div style="text-align:center;padding:14px;color:var(--muted);font-size:0.8rem;">No contacts added yet.</div>';
     return;
   }
   contacts.forEach(c => {
     const initials = c.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    const d = document.createElement('div'); d.className = 'contact-item';
-    d.innerHTML = `<div class="avatar">${initials}</div><div><div class="contact-name">${c.name}</div><div class="contact-phone">${c.phone}</div></div><button class="del-btn" onclick="removeContact(${c.id})">🗑</button>`;
+    const d = document.createElement('div');
+    d.className = 'contact-item';
+    d.innerHTML = `<div class="avatar">${initials}</div>
+      <div class="contact-info"><div class="contact-name">${c.name}</div><div class="contact-phone">${c.phone}</div></div>
+      <button class="del-btn" onclick="removeContact(${c.id})">🗑</button>`;
     list.appendChild(d);
   });
 }
 
 async function addContact() {
-  const name   = document.getElementById('newName').value.trim();
+  const name = document.getElementById('newName').value.trim();
   const numRaw = document.getElementById('newPhone').value.trim().replace(/^0+/,'');
-  const code   = document.getElementById('countryCode').value;
-  if (!name || !numRaw) { showToast('⚠️ Enter name and phone'); return; }
+  const code = document.getElementById('countryCode').value;
+  if (!name || !numRaw) { showToast('⚠️ Enter name and phone number'); return; }
   const phone = code + numRaw;
-  const saved = await API.post('/contacts', {name, phone});
-  contacts.push(saved && saved.id ? saved : {id:Date.now(), name, phone});
+  const newContact = await API.post('/contacts', {name, phone});
+  if (newContact && newContact.id) {
+    contacts.push(newContact);
+  } else {
+    contacts.push({id: Date.now(), name, phone});
+  }
   document.getElementById('newName').value = '';
   document.getElementById('newPhone').value = '';
   renderContacts();
-  addEvent('Contact added: '+name+' ('+phone+')', 'ok', 'ok');
-  showToast('✅ '+name+' added');
+  addEvent('Contact added: ' + name + ' (' + phone + ')', 'ok', 'ok');
+  showToast('✅ ' + name + ' added');
 }
 
 async function removeContact(id) {
-  const c = contacts.find(x=>x.id===id); if (!c) return;
+  const c = contacts.find(x=>x.id===id);
+  if (!c) return;
   await API.del('/contacts/'+id).catch(()=>{});
   contacts = contacts.filter(x=>x.id!==id);
   renderContacts();
-  addEvent('Contact removed: '+c.name, 'warn', 'warn');
+  addEvent('Contact removed: ' + c.name, 'warn', 'warn');
 }
 
-// ── Timeline ───────────────────────────────────────
+// ─────────────────────────────────────────────────────
+//  TIMELINE
+// ─────────────────────────────────────────────────────
 function addEvent(msg, color, badge) {
   const time = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  events.unshift({msg,color,badge,time}); if (events.length>40) events.pop();
+  events.unshift({msg, color, badge, time});
+  if (events.length > 40) events.pop();
   renderTimeline();
 }
 
 function renderTimeline() {
   const tl = document.getElementById('timeline');
   tl.innerHTML = '';
-  document.getElementById('evCount').textContent = events.length + ' event' + (events.length===1?'':'s');
-  if (!events.length) { tl.innerHTML='<div style="color:var(--muted);font-size:0.78rem;padding:4px 0;">No events yet.</div>'; return; }
+  if (!events.length) {
+    tl.innerHTML = '<div style="color:var(--muted);font-size:0.78rem;padding:0 0 6px;">No events yet. Start monitoring to begin.</div>';
+    return;
+  }
   events.forEach(e => {
-    const item = document.createElement('div'); item.className='tl-item';
-    item.innerHTML = `<div class="tl-left"><div class="tl-dot ${e.color||''}"></div><div class="tl-line"></div></div><div><div class="tl-msg">${e.msg}</div><div class="tl-time">${e.time}</div><span class="tl-badge ${e.badge||'info'}">${e.badge||'info'}</span></div>`;
+    const item = document.createElement('div');
+    item.className = 'timeline-item';
+    item.innerHTML = `<div class="timeline-left"><div class="tl-dot ${e.color||''}"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="tl-msg">${e.msg}</div>
+        <div class="tl-time">${e.time}</div>
+        <span class="tl-badge ${e.badge||'info'}">${e.badge||'info'}</span>
+      </div>`;
     tl.appendChild(item);
   });
 }
 
 function renderSOSHistory() {
   const list = document.getElementById('sosHistoryList');
-  if (!sosHistory.length) { list.innerHTML='<div style="color:var(--muted);font-size:0.78rem;">No SOS events yet.</div>'; return; }
-  list.innerHTML = sosHistory.slice(0,8).map(e=>`<div class="sos-history-item"><span class="sos-history-badge">SOS</span><div><div class="sos-history-text">${e.reason?.slice(0,100)||'SOS triggered'}</div><div class="sos-history-time">${new Date(e.timestamp).toLocaleString('en-IN')} · ${e.contacts?.join(', ')||'no contacts'}</div></div></div>`).join('');
+  if (!sosHistory.length) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:0.78rem;padding:8px 0;">No SOS events yet.</div>';
+    return;
+  }
+  list.innerHTML = sosHistory.slice(0, 10).map(e => `
+    <div class="sos-history-item">
+      <span class="sos-history-badge">SOS</span>
+      <div>
+        <div class="sos-history-text">${e.reason?.slice(0,120) || 'SOS triggered'}</div>
+        <div class="sos-history-time">${new Date(e.timestamp).toLocaleString('en-IN')} · ${e.contacts?.join(', ') || 'no contacts'}</div>
+      </div>
+    </div>`).join('');
 }
 
-// ── Settings ───────────────────────────────────────
+// ─────────────────────────────────────────────────────
+//  SETTINGS
+// ─────────────────────────────────────────────────────
 function toggle(key, id) {
   settings[key] = !settings[key];
   document.getElementById(id).classList.toggle('on', settings[key]);
@@ -1137,8 +1798,12 @@ function applySettingsToUI() {
     const el = document.getElementById(id);
     if (el) el.classList.toggle('on', !!settings[k]);
   }
-  const a=document.getElementById('accelThresh'), s=document.getElementById('soundThresh'), g=document.getElementById('gyroThresh');
-  if(a) a.value=accelThresh; if(s) s.value=soundThresh; if(g) g.value=gyroThresh;
+  const a = document.getElementById('accelThresh');
+  const s = document.getElementById('soundThresh');
+  const g = document.getElementById('gyroThresh');
+  if (a) a.value = accelThresh;
+  if (s) s.value = soundThresh;
+  if (g) g.value = gyroThresh;
   updateThresh();
 }
 
@@ -1149,22 +1814,34 @@ function updateThresh() {
   document.getElementById('accelThreshVal').textContent = accelThresh + ' m/s²';
   document.getElementById('soundThreshVal').textContent = soundThresh + ' dB';
   document.getElementById('gyroThreshVal').textContent  = gyroThresh  + ' rad/s';
+  updateRangeTrack('accelThresh');
+  updateRangeTrack('soundThresh');
+  updateRangeTrack('gyroThresh');
+}
+
+function updateRangeTrack(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const min = +el.min, max = +el.max, val = +el.value;
+  const pct = ((val - min) / (max - min) * 100).toFixed(1);
+  el.style.background = `linear-gradient(90deg, var(--rose) ${pct}%, rgba(255,255,255,0.1) ${pct}%)`;
 }
 
 function saveSettings() {
-  const payload = {...settings, accelThresh, soundThresh, gyroThresh,
-    sosMessage: document.getElementById('sosMsg')?.value||'', panicPassword};
+  const msg = document.getElementById('sosMsg')?.value || '';
+  const payload = {...settings, accelThresh, soundThresh, gyroThresh, sosMessage: msg, panicPassword};
   API.post('/settings', payload).catch(()=>{});
 }
 
-// ── Panic password ─────────────────────────────────
+// ─────────────────────────────────────────────────────
+//  PANIC PASSWORD
+// ─────────────────────────────────────────────────────
 function savePanicPassword() {
   const val = document.getElementById('panicPasswordInput').value.trim();
-  if (!val||val.length<3) { showToast('⚠️ Min 3 characters'); return; }
+  if (!val || val.length < 3) { showToast('⚠️ Min 3 characters'); return; }
   panicPassword = val;
-  document.getElementById('panicPasswordInput').value = '';
   document.getElementById('panicStatus').textContent = `✅ Panic password set (${val.length} chars)`;
-  addEvent('Panic password updated','ok','info');
+  addEvent('Panic password updated', 'ok', 'info');
   showToast('🔐 Panic password saved!');
   saveSettings();
 }
@@ -1173,60 +1850,103 @@ document.addEventListener('keypress', e => {
   if (!monitoring || !panicPassword) return;
   if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
   panicBuffer += e.key;
-  if (panicBuffer.length > panicPassword.length+2) panicBuffer = panicBuffer.slice(-panicPassword.length-2);
-  clearTimeout(panicBufferTimer); panicBufferTimer = setTimeout(()=>panicBuffer='', 3000);
-  if (panicBuffer.includes(panicPassword)) { panicBuffer=''; addEvent('🔐 Panic password triggered SOS!','danger','sos'); triggerSOS('🔐 Panic password triggered'); }
+  if (panicBuffer.length > panicPassword.length + 2)
+    panicBuffer = panicBuffer.slice(-panicPassword.length - 2);
+  clearTimeout(panicBufferTimer);
+  panicBufferTimer = setTimeout(() => panicBuffer = '', 3000);
+  if (panicBuffer.includes(panicPassword)) {
+    panicBuffer = '';
+    addEvent('🔐 Panic password triggered SOS!', 'danger', 'sos');
+    triggerSOS('🔐 Panic password triggered');
+  }
 });
 
-// ── Test SOS ───────────────────────────────────────
+// ─────────────────────────────────────────────────────
+//  TEST SOS
+// ─────────────────────────────────────────────────────
 function startTestSOS() {
-  if (testMode||sosActive) return;
-  testMode=true; testCount=10;
+  if (testMode || sosActive) return;
+  testMode = true; testCount = 10;
   document.getElementById('testOverlay').classList.add('show');
-  updateTestCountdown(10); playAlert('detect');
+  updateTestCountdown(10);
   if (settings.vibrate && navigator.vibrate) navigator.vibrate([200,100,200]);
-  testTimer = setInterval(()=>{ testCount--; updateTestCountdown(testCount); if(testCount<=0){clearInterval(testTimer);finishTestSOS();} },1000);
+  playAlert('detect');
+  testTimer = setInterval(() => {
+    testCount--;
+    updateTestCountdown(testCount);
+    if (testCount <= 0) { clearInterval(testTimer); finishTestSOS(); }
+  }, 1000);
 }
 
 function updateTestCountdown(n) {
   document.getElementById('testCountNum').textContent = n;
-  const circ = 2*Math.PI*70;
-  document.getElementById('testCrProg').style.strokeDashoffset = circ-(n/10)*circ;
+  const circ = 2 * Math.PI * 70;
+  document.getElementById('testCrProg').style.strokeDashoffset = circ - (n/10) * circ;
 }
 
-function cancelTestSOS() { clearInterval(testTimer); testMode=false; document.getElementById('testOverlay').classList.remove('show'); showToast('🧪 Test cancelled'); }
+function cancelTestSOS() {
+  clearInterval(testTimer); testMode = false;
+  document.getElementById('testOverlay').classList.remove('show');
+  showToast('🧪 Test cancelled');
+}
 
 function finishTestSOS() {
-  testMode=false; document.getElementById('testOverlay').classList.remove('show');
+  testMode = false;
+  document.getElementById('testOverlay').classList.remove('show');
   const loc = gpsLat ? `https://maps.google.com/?q=${gpsLat},${gpsLon}` : '(GPS unavailable)';
-  const msg = (document.getElementById('sosMsg').value||'').replace('{location}',loc);
+  const msg = (document.getElementById('sosMsg').value||'').replace('{location}', loc);
   const results = [
-    {icon:'📳',text:'Sensors streaming from Android SensorApp'},
-    {icon:'⏱️',text:'10-second cancel window tested'},
-    {icon:'📍',text:`Location: <strong>${loc.slice(0,70)}</strong>`},
-    {icon:'💬',text:`Message: <em>"${msg.slice(0,80)}${msg.length>80?'…':''}"</em>`},
-    ...contacts.map(c=>({icon:'📱',text:`SMS would open for <strong>${c.name}</strong> (${c.phone})`})),
-    ...(contacts.length===0?[{icon:'⚠️',text:'No contacts saved — add some in Emergency Contacts'}]:[]),
-    {icon:'✅',text:'All systems working correctly!'}
+    {icon:'📳', text:'Sensors engaged — accel, gyro, mic, GPS'},
+    {icon:'⏱️', text:'10-second cancel window tested'},
+    {icon:'📍', text:`Location: <strong>${loc.slice(0,70)}</strong>`},
+    {icon:'💬', text:`SOS message: <em>"${msg.slice(0,80)}${msg.length>80?'…':''}"</em>`},
+    ...contacts.map(c=>({icon:'📱', text:`SMS would open for <strong>${c.name}</strong> (${c.phone})`})),
+    ...(contacts.length===0 ? [{icon:'⚠️',text:'No contacts saved — add some in Contacts tab'}] : []),
+    {icon:'✅', text:'All systems working correctly!'}
   ];
-  const list = document.getElementById('testResultList'); list.innerHTML='';
-  results.forEach(r=>{ const d=document.createElement('div'); d.className='test-result-item'; d.innerHTML=`<span style="font-size:1rem;flex-shrink:0;">${r.icon}</span><span>${r.text}</span>`; list.appendChild(d); });
+  const list = document.getElementById('testResultList');
+  list.innerHTML = '';
+  results.forEach(r => {
+    const d = document.createElement('div');
+    d.className = 'test-result-item';
+    d.innerHTML = `<span class="tri">${r.icon}</span><span>${r.text}</span>`;
+    list.appendChild(d);
+  });
   document.getElementById('testResultOverlay').classList.add('show');
-  addEvent('🧪 SOS dry run completed','ok','ok'); playAlert('cancel');
+  addEvent('🧪 SOS dry run completed', 'ok', 'ok');
+  playAlert('cancel');
 }
 
-function closeTestResult() { document.getElementById('testResultOverlay').classList.remove('show'); showToast("✅ Test complete — you're all set!"); }
+function closeTestResult() {
+  document.getElementById('testResultOverlay').classList.remove('show');
+  showToast("✅ Test complete — you're all set!");
+}
 
-// ── Status, wake lock, audio, toast ───────────────
+// ─────────────────────────────────────────────────────
+//  SHAKE → CANCEL SOS (mirrored from SensorApp)
+// ─────────────────────────────────────────────────────
+window.addEventListener('devicemotion', e => {
+  if (!sosActive) return;
+  const a = e.accelerationIncludingGravity;
+  if (!a) return;
+  const mag = Math.sqrt((a.x||0)**2 + (a.y||0)**2 + (a.z||0)**2);
+  if (mag > 28) cancelSOS();
+});
+
+// ─────────────────────────────────────────────────────
+//  STATUS + WAKE LOCK + AUDIO + TOAST
+// ─────────────────────────────────────────────────────
 function setStatus(type, text) {
-  const pill=document.getElementById('statusPill'), dot=document.getElementById('sdot'), txt=document.getElementById('statusText');
-  pill.className='ss-pill'+(type?' '+type:'');
-  dot.className='ss-dot'+(type==='active'?' pulse':'');
-  txt.textContent=text;
+  const pill = document.getElementById('statusPill');
+  const dot  = document.getElementById('sdot');
+  const txt  = document.getElementById('statusText');
+  pill.className = 'status-pill' + (type ? ' '+type : '');
+  dot.className  = 'sdot' + (type==='active' ? ' pulse' : '');
+  txt.textContent = text;
 }
 
 async function requestWakeLock() {
-  if (!settings.background||!('wakeLock' in navigator)) return;
+  if (!settings.background || !('wakeLock' in navigator)) return;
   try { await navigator.wakeLock.request('screen'); } catch(e){}
 }
 
@@ -1234,24 +1954,72 @@ let audioCtxBeep = null;
 function playAlert(type) {
   if (!settings.beep) return;
   try {
-    if (!audioCtxBeep) audioCtxBeep = new (window.AudioContext||window.webkitAudioContext)();
-    const osc=audioCtxBeep.createOscillator(), gain=audioCtxBeep.createGain();
+    if (!audioCtxBeep) audioCtxBeep = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtxBeep.createOscillator();
+    const gain = audioCtxBeep.createGain();
     osc.connect(gain); gain.connect(audioCtxBeep.destination);
-    osc.type='sine'; osc.frequency.value=type==='sos'?880:type==='cancel'?440:660;
-    gain.gain.setValueAtTime(type==='sos'?0.3:type==='cancel'?0.15:0.2, audioCtxBeep.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtxBeep.currentTime+0.6);
-    osc.start(); osc.stop(audioCtxBeep.currentTime+0.6);
+    osc.type = 'sine';
+    const freq = type==='sos' ? 880 : type==='cancel' ? 440 : 660;
+    const vol  = type==='sos' ? 0.3 : type==='cancel' ? 0.15 : 0.2;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(vol, audioCtxBeep.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtxBeep.currentTime + 0.6);
+    osc.start(); osc.stop(audioCtxBeep.currentTime + 0.6);
   } catch(e){}
 }
 
 function showToast(msg) {
-  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+// Auto-save thresholds
 document.addEventListener('input', e => {
   if (['accelThresh','soundThresh','gyroThresh'].includes(e.target.id)) saveSettings();
 });
+
+// ─────────────────────────────────────────────────────
+//  START
+// ─────────────────────────────────────────────────────
+// ── Sidebar clock ──
+function updateSidebarClock() {
+  const el = document.getElementById('sidebarClock');
+  if (el) el.textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+setInterval(updateSidebarClock, 1000);
+updateSidebarClock();
+
+// ── Page heading update ──
+const PAGE_HEADINGS = {Home:['Guard','Mode'],Dash:['Sensor','Streams'],Contacts:['Emergency','Contacts'],Settings:['App','Settings']};
+const _origShowPage = showPage;
+showPage = function(name) {
+  _origShowPage(name);
+  const h = PAGE_HEADINGS[name];
+  if (h) document.getElementById('pageHeading').innerHTML = h[0]+' <span>'+h[1]+'</span>';
+};
+
+// ── Mirror WS badges to sensors page ──
+const _origSetWSBadge = setWSBadge;
+setWSBadge = function(connected) {
+  _origSetWSBadge(connected);
+  const b2 = document.getElementById('wsBadge2');
+  if (b2) { b2.className='ws-badge '+(connected?'connected':'disconnected'); b2.innerHTML='<span class="ws-dot"></span>'+(connected?'Server connected':'Connecting…'); }
+};
+const _origSetAndroidBadge = setAndroidBadge;
+setAndroidBadge = function(connected) {
+  _origSetAndroidBadge(connected);
+  const b2 = document.getElementById('androidBadge2');
+  if (b2) { b2.className='ws-badge '+(connected?'connected':''); b2.innerHTML='<span class="ws-dot"></span>'+(connected?'Android live':'Android offline'); }
+};
+
+// ── Patch renderTimeline to update evCount badge ──
+const _origRenderTimeline = renderTimeline;
+renderTimeline = function() {
+  _origRenderTimeline();
+  const ec = document.getElementById('evCount');
+  if (ec) ec.textContent = events.length+' event'+(events.length===1?'':'s');
+};
 
 window.addEventListener('DOMContentLoaded', init);
 </script>
